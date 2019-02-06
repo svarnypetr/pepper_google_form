@@ -6,8 +6,8 @@ import json
 
 SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-SECRETS_FILE = "southern-range-230110-e86cb31f6665.json"
-SPREADSHEET = "Hagen test form (sheet)"
+SECRETS_FILE = "Macerata-b7cd0349db2e.json"
+SPREADSHEET = "Lez 1 02 26 Obiettivi (Responses)"
 # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
 # Load in the secret JSON key (must be a service account)
 json_key = json.load(open(SECRETS_FILE))
@@ -40,3 +40,24 @@ for sheet in gc.openall():
         # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
 
         print(data.head())
+
+# import datetime, schedule, request
+#
+# TIME = [('17.04.2011', '06:41:44', 'abc.php?xxx'),
+#     ('17.04.2011', '07:21:31', 'abc.php?yyy'),
+#     ('17.04.2011', '07:33:04', 'abc.php?zzz'),
+#     ('17.04.2011', '07:41:23', 'abc.php?www')]
+#
+# def job():
+#     global TIME
+#     date = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+#     for i in TIME:
+#         runTime = i[0] + " " + i[1]
+#         if i and date == str(runTime):
+#             request.get(str(i[2]))
+#
+# schedule.every(0.01).minutes.do(job)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
