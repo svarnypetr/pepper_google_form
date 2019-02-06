@@ -42,8 +42,16 @@ Then it is best to follow this **workflow** in the repository:
 `git rebase master`
 `git push -f`
 
-6. There might be some merge conflicts, these have to be resolved in the files that are indicated as merge conflicts. You will see there marks for the conflicting parts of the file.
+6. There might be some merge conflicts, these have to be resolved in the files that are indicated as merge conflicts.
+ You will see there marks for the conflicting parts of the file.
 
 ### Python virtualenv
-It is good practice to use *virtual environments* for Python development as it allows to keep packages separate from the host system Python.
+It is good practice to use *virtual environments* for Python development as it allows to keep packages separate from the host system Python. 
+I am using `virtualenv` as the environment here, but there are also others.
+
+**Basic Virtualenv**
+* in folder of project - create a new virtualenv named env using python 
+at given path: `virtualenv --python=/path/to/python/bin env`
+* activate the virtualenv: `source venv/bin/activate`
+* deactivate the virtualenv once inside: `deactivate`
 
