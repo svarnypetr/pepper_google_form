@@ -34,7 +34,7 @@ for sheet in gc.openall():
                         }
         data.rename(columns=column_names, inplace=True)
         data.timestamp = pd.to_datetime(data.timestamp)
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
 
         # pd.Timestamp.now()
         # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
