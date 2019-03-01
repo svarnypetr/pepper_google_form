@@ -53,5 +53,6 @@ I am using `virtualenv` as the environment here, but there are also others.
 * in folder of project - create a new virtualenv named env using python 
 at given path: `virtualenv --python=/path/to/python/bin env`
 * activate the virtualenv: `source venv/bin/activate`
+* install requirements: `pip install -r requirements`
 * deactivate the virtualenv once inside: `deactivate`
 
