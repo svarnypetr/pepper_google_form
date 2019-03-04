@@ -56,3 +56,7 @@ at given path: `virtualenv --python=/path/to/python/bin env`
 * install requirements: `pip install -r requirements`
 * deactivate the virtualenv once inside: `deactivate`
 
+**How to SCP to Pepper**
+In order to upload the image to Pepper, we can use `scp`. Example guide is [here](http://www.hypexr.org/linux_scp_help.php).
+* `scp image.png your_username@PEPPER_IP:./.local/share/PackageManager/apps/PROJECT_NAME/html/image.jpg`
+
