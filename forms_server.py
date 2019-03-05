@@ -2,9 +2,11 @@ from __future__ import print_function
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+import matplotlib.pyplot as plt
 import json
 import socket
 import subprocess
+import os
 
 SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
@@ -20,8 +22,6 @@ API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez 1 02 26 Obiettivi (Responses)"
 
 
-p = subprocess.Popen(["scp", "my_file.txt", "username@server:path"])
-sts = os.waitpid(p.pid, 0)
 
 
 def get_forms_data():
@@ -64,15 +64,27 @@ def get_forms_data():
                 # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
 
                 # Prints the first 10 lines of results
-                print(data.head(10))
+                df = data.head(10)
+        import ipdb; ipdb.set_trace()
+
+        return 'reaction', df
 
         # TODO: Have code connect to a given form requested maybe by Pepper
         # TODO: Do calculations on received data
 
+def make_data_viz(df):
+        fig, ax = plt.subplots()
+        df.hist('ColumnName', ax=ax)
+        image_name = 'image.pnd'
+        fig.savefig(image_name)
+        pepper_img_location = "nao@10.10.60.137:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.png"
+        p = subprocess.Popen(['scp', image_name, pepper_img_location])
+        sts = os.waitpid(p.pid, 0)
+
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 8080  # Make sure it's within the > 1024 $$ <65535 range
+        port = 8082  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -85,8 +97,12 @@ if __name__ == '__main__':
                 if not data:
                         break
                 print('From online user: ' + data)
+
+                output, df = get_forms_data()
+
+                # make_data_viz(df)
+
                 data = data.upper()
                 c.send(data.encode('utf-8'))
-                get_forms_data()
 
         c.close()
