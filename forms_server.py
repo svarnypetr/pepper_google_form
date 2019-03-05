@@ -22,8 +22,6 @@ API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez 1 02 26 Obiettivi (Responses)"
 
 
-
-
 def get_forms_data():
         # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
         # Load in the secret JSON key (must be a service account)
@@ -65,26 +63,29 @@ def get_forms_data():
 
                 # Prints the first 10 lines of results
                 df = data.head(10)
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
 
         return 'reaction', df
 
         # TODO: Have code connect to a given form requested maybe by Pepper
         # TODO: Do calculations on received data
 
+
 def make_data_viz(df):
         fig, ax = plt.subplots()
-        df.hist('ColumnName', ax=ax)
-        image_name = 'image.pnd'
+        import ipdb; ipdb.set_trace()
+        shown_data = df.iloc[:, 2]
+        shown_data.hist()
+        image_name = 'image.png'
         fig.savefig(image_name)
-        pepper_img_location = "nao@10.10.60.137:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.png"
-        p = subprocess.Popen(['scp', image_name, pepper_img_location])
-        sts = os.waitpid(p.pid, 0)
+        # pepper_img_location = "nao@10.10.60.137:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.png"
+        # p = subprocess.Popen(['scp', image_name, pepper_img_location])
+        # sts = os.waitpid(p.pid, 0)
 
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 8082  # Make sure it's within the > 1024 $$ <65535 range
+        port = 8084  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -100,7 +101,7 @@ if __name__ == '__main__':
 
                 output, df = get_forms_data()
 
-                # make_data_viz(df)
+                make_data_viz(df)
 
                 data = data.upper()
                 c.send(data.encode('utf-8'))
