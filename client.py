@@ -5,13 +5,14 @@ import socket
 
 def client():
     host = socket.gethostname()  # get local machine name
-    port = 8084  # Make sure it's within the > 1024 $$ <65535 range
+    port = 8079  # Make sure it's within the > 1024 $$ <65535 range
 
     s = socket.socket()
     s.connect((host, port))
 
     message = input('-> ')
-    while message != 'q':
+    # message = ''
+    while message != 'stop':
         s.send(message.encode('utf-8'))
         data = s.recv(1024).decode('utf-8')
         print('Received from server: ' + data)

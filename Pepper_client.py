@@ -7,8 +7,6 @@ class MyClass(GeneratedClass):
         if python_path not in sys.path:
             sys.path.append(python_path)
 
-
-
     def client(self):
         import socket
         host = socket.gethostname()  # get local machine name
@@ -17,12 +15,9 @@ class MyClass(GeneratedClass):
         s = socket.socket()
         s.connect(('193.205.116.65', port))
 
-        message = input('-> ')
         while message != 'q':
-            s.send(message.encode('utf-8'))
-            data = s.recv(1024).decode('utf-8')
-            print('Received from server: ' + data)
-            message = input('==> ')
+            received_message = s.recv(1024).decode('utf-8')
+            self.myOutput(received_message)
         s.close()
 
     def onLoad(self):

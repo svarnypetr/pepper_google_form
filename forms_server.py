@@ -35,45 +35,40 @@ def get_forms_data():
         for sheet in gc.openall():
                 print("{} - {}".format(sheet.title, sheet.id))
 
+
         # Open up the workbook based on the spreadsheet name
-                workbook = gc.open(SPREADSHEET)
+        workbook = gc.open(SPREADSHEET)
 
         # Get the first sheet
-                sheet = workbook.sheet1
+        sheet = workbook.sheet1
 
         # Extract all data into a dataframe
-                data = pd.DataFrame(sheet.get_all_records())
+        data = pd.DataFrame(sheet.get_all_records())
 
         # Do some minor cleanups on the data
         # Rename the columns to make it easier to manipulate
         # The data comes in through a dictionary so we can not assume order stays the
         # same so must name each column
         # Currently columns are renamed without knowing their names in order to work with any form
-                column_names_original = list(data)
-                column_names = {}
-                for name in column_names_original:
-                    column_names[name] = name.lower().replace(' ', '')
+        column_names_original = list(data)
+        column_names = {}
+        for name in column_names_original:
+            column_names[name] = name.lower().replace(' ', '')
 
-                data.rename(columns=column_names, inplace=True)
-                data.timestamp = pd.to_datetime(data.timestamp)
+        data.rename(columns=column_names, inplace=True)
+        data.timestamp = pd.to_datetime(data.timestamp)
 
-                # NOTE: This code will allow us to access/work with data from the last 2 minutes
-                # pd.Timestamp.now()
-                # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
+        # NOTE: This code will allow us to access/work with data from the last 2 minutes
+        # pd.Timestamp.now()
+        # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
 
-                # Prints the first 10 lines of results
-                df = data.head(10)
-        # import ipdb; ipdb.set_trace()
+        # Prints the first 10 lines of results
 
-        return 'reaction', df
-
-        # TODO: Have code connect to a given form requested maybe by Pepper
-        # TODO: Do calculations on received data
+        return 'reaction', data
 
 
 def make_data_viz(df):
         fig, ax = plt.subplots()
-        import ipdb; ipdb.set_trace()
         shown_data = df.iloc[:, 2]
         shown_data.hist()
         image_name = 'image.png'
@@ -85,7 +80,7 @@ def make_data_viz(df):
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 8084  # Make sure it's within the > 1024 $$ <65535 range
+        port = 8079  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -95,15 +90,13 @@ if __name__ == '__main__':
         print("Connection from: " + str(addr))
         while True:
                 data = c.recv(1024).decode('utf-8')
-                if not data:
+                if data == 'stop':
                         break
-                print('From online user: ' + data)
 
                 output, df = get_forms_data()
 
                 make_data_viz(df)
 
-                data = data.upper()
-                c.send(data.encode('utf-8'))
+                c.send(output.encode('utf-8'))
 
         c.close()
