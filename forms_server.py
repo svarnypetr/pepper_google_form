@@ -2,7 +2,7 @@ from __future__ import print_function
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import json
 import socket
 import subprocess
@@ -64,18 +64,38 @@ def get_forms_data():
 
         # Prints the first 10 lines of results
 
-        return 'reaction', data
+        return data
 
 
-def make_data_viz(df):
-        fig, ax = plt.subplots()
-        shown_data = df.iloc[:, 2]
-        shown_data.hist()
-        image_name = 'image.png'
-        fig.savefig(image_name)
-        # pepper_img_location = "nao@10.10.60.137:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.png"
-        # p = subprocess.Popen(['scp', image_name, pepper_img_location])
-        # sts = os.waitpid(p.pid, 0)
+# def make_data_viz(df):
+#         """
+#         Based on processed data generates a histogram that is then saved and scp-d to Pepper.
+#         :param df: {pandas.DataFrame}
+#         :return: None
+#         """
+#         fig, ax = plt.subplots()
+#         image_name = 'image.png'
+#         fig.savefig(image_name)
+#         # pepper_img_location = "nao@10.10.60.137:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.png"
+#         # p = subprocess.Popen(['scp', image_name, pepper_img_location])
+#         # sts = os.waitpid(p.pid, 0)
+#         return None
+
+
+def generate_output_message(df):
+        """
+        Generates messages for the output based on the processed data.
+        :param df: {pandas.DataFrame}
+        :return: {string}
+        """
+        counted = df.iloc[:, 2].value_counts()
+        total = counted.sum(axis=0)
+        percentage_correct = float(counted.ix['Si']) / total
+        if percentage_correct > 0.6:
+                output_string = 'You were correct.'
+        else:
+                output_string = 'You did not understand.'
+        return output_string
 
 
 if __name__ == '__main__':
@@ -93,9 +113,10 @@ if __name__ == '__main__':
                 if data == 'stop':
                         break
 
-                output, df = get_forms_data()
+                df = get_forms_data()
 
-                make_data_viz(df)
+                output = generate_output_message(df)
+                # make_data_viz(df)
 
                 c.send(output.encode('utf-8'))
 

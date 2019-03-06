@@ -9,15 +9,15 @@ class MyClass(GeneratedClass):
 
     def client(self):
         import socket
-        host = socket.gethostname()  # get local machine name
-        port = 12336  # Make sure it's within the > 1024 $$ <65535 range
-
+        port = 12336  # Is this port the same as on your computer, i.e. the server?
+        host_computer_IP = '193.205.116.65' # Is this the IP of your computer, i.e. the server?
         s = socket.socket()
-        s.connect(('193.205.116.65', port))
+        s.connect((host_computer_IP, port))
+        received_message = False
 
-        while message != 'q':
+        while not received_message:
             received_message = s.recv(1024).decode('utf-8')
-            self.myOutput(received_message)
+            self.Result(received_message)
         s.close()
 
     def onLoad(self):
