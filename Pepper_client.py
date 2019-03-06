@@ -19,6 +19,7 @@ class MyClass(GeneratedClass):
             s.send('give form'.encode('utf-8'))
             received_message = s.recv(1024).decode('utf-8')
             self.Result(received_message)
+            s.send('stop'.encode('utf-8'))
         s.close()
 
     def onLoad(self):

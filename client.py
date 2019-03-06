@@ -10,13 +10,12 @@ def client():
     s = socket.socket()
     s.connect((host, port))
 
-    message = input('-> ')
-    # message = ''
-    while message != 'stop':
-        s.send(message.encode('utf-8'))
-        data = s.recv(1024).decode('utf-8')
-        print('Received from server: ' + data)
-        message = input('==> ')
+    received_message = False
+    while not received_message:
+        s.send('give me data'.encode('utf-8'))
+        received_message = s.recv(1024).decode('utf-8')
+        print('Received from server: ' + received_message)
+        s.send('stop'.encode('utf-8'))
     s.close()
 
 
