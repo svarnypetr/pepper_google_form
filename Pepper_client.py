@@ -16,6 +16,7 @@ class MyClass(GeneratedClass):
         received_message = False
 
         while not received_message:
+            s.send('give form'.encode('utf-8'))
             received_message = s.recv(1024).decode('utf-8')
             self.Result(received_message)
         s.close()
@@ -23,7 +24,6 @@ class MyClass(GeneratedClass):
     def onLoad(self):
         #put initialization code here
         pass
-
 
     def onUnload(self):
         #put clean-up code here
