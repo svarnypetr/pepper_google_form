@@ -92,9 +92,9 @@ def generate_output_message(df):
         total = counted.sum(axis=0)
         percentage_correct = float(counted.ix['Si']) / total
         if percentage_correct > 0.6:
-                output_string = 'You were correct.'
+                output_string = 'Yes'
         else:
-                output_string = 'You did not understand.'
+                output_string = 'No'
         return output_string
 
 
@@ -104,20 +104,23 @@ if __name__ == '__main__':
 
         s = socket.socket()
         s.bind((host, port))
+        NUMBER_OF_FORMS = 5
+        run_count = 0
+        while run_count < NUMBER_OF_FORMS:
+                s.listen(1)
+                c, addr = s.accept()
+                print("Connection from: " + str(addr))
+                while True:
+                        data = c.recv(1024).decode('utf-8')
+                        if data == 'stop':
+                                break
 
-        s.listen(1)
-        c, addr = s.accept()
-        print("Connection from: " + str(addr))
-        while True:
-                data = c.recv(1024).decode('utf-8')
-                if data == 'stop':
-                        break
+                        df = get_forms_data()
 
-                df = get_forms_data()
+                        output = generate_output_message(df)
+                        # make_data_viz(df)
 
-                output = generate_output_message(df)
-                # make_data_viz(df)
+                        c.send(output.encode('utf-8'))
 
-                c.send(output.encode('utf-8'))
-
-        c.close()
+                c.close()
+                run_count += 1
