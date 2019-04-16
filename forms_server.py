@@ -14,8 +14,8 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
 # This needs to be your API key file
 # NOTE: Currently I have a different key file, so I keep it commented
 # API_KEY_FILE = "Macerata-b7cd0349db2e.json"
-# API_KEY_FILE = "macerata-1549040199941-9b1795f038ec.json"
-API_KEY_FILE = "key.json"
+API_KEY_FILE = "macerata-1549040199941-9b1795f038ec.json"
+#API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
@@ -25,7 +25,7 @@ SPREADSHEET = "Lez 1 02 26 Obiettivi (Responses)"
 def get_forms_data():
         # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
         # Load in the secret JSON key (must be a service account)
-        # json_key = json.load(open(API_KEY_FILE))
+        #json_key = json.load(open(API_KEY_FILE))
 
         # Authenticate using the signed key
         credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
@@ -92,15 +92,15 @@ def generate_output_message(df):
         total = counted.sum(axis=0)
         percentage_correct = float(counted.ix['Si']) / total
         if percentage_correct > 0.6:
-                output_string = 'You were correct.'
+                output_string = 'Yes'
         else:
-                output_string = 'You did not understand.'
+                output_string = 'No'
         return output_string
 
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 8079  # Make sure it's within the > 1024 $$ <65535 range
+        port = 12299  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -119,5 +119,6 @@ if __name__ == '__main__':
                 # make_data_viz(df)
 
                 c.send(output.encode('utf-8'))
+                
 
         c.close()

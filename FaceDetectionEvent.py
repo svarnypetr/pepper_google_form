@@ -12,7 +12,7 @@ from naoqi import ALModule
 
 from optparse import OptionParser
 
-NAO_IP = "nao.local"  # TODO: HAVE THE CORRECT IP OF PEPPER
+NAO_IP = "10.10.6.4"  # TODO: HAVE THE CORRECT IP OF PEPPER
 
 
 # Global variable to store the HumanGreeter module instance
@@ -72,7 +72,7 @@ def main():
         type="int")
     parser.set_defaults(
         pip=NAO_IP,
-        pport=40486)  # TODO: HAVE THE CORRECT PORT HERE
+        pport=9559)  # TODO: HAVE THE CORRECT PORT HERE
 
     (opts, args_) = parser.parse_args()
     pip   = opts.pip
