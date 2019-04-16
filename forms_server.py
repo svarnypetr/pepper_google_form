@@ -91,7 +91,7 @@ def generate_output_message(df):
         counted = df.iloc[:, 2].value_counts()
         total = counted.sum(axis=0)
         percentage_correct = float(counted.ix['Si']) / total
-        if percentage_correct > 0.6:
+        if percentage_correct > 1.0:
                 output_string = 'Yes'
         else:
                 output_string = 'No'
@@ -100,7 +100,7 @@ def generate_output_message(df):
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 8079  # Make sure it's within the > 1024 $$ <65535 range
+        port = 13000  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
