@@ -19,7 +19,7 @@ API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
-SPREADSHEET = "Lez 1 02 26 Obiettivi (Responses)"
+SPREADSHEET = "11 lesson (Responses)"
 
 
 def get_forms_data():
@@ -40,7 +40,7 @@ def get_forms_data():
         workbook = gc.open(SPREADSHEET)
 
         # Get the first sheet
-        sheet = workbook.sheet1
+        sheet = workbook.worksheet('Calculations')
 
         # Extract all data into a dataframe
         data = pd.DataFrame(sheet.get_all_records())
@@ -56,7 +56,7 @@ def get_forms_data():
             column_names[name] = name.lower().replace(' ', '')
 
         data.rename(columns=column_names, inplace=True)
-        data.timestamp = pd.to_datetime(data.timestamp)
+        # data.timestamp = pd.to_datetime(data.timestamp)
 
         # NOTE: This code will allow us to access/work with data from the last 2 minutes
         # pd.Timestamp.now()
@@ -65,6 +65,29 @@ def get_forms_data():
         # Prints the first 10 lines of results
 
         return data
+
+
+def get_ws(sheet_name):
+        # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
+        # Load in the secret JSON key (must be a service account)
+        # json_key = json.load(open(API_KEY_FILE))
+
+        # Authenticate using the signed key
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
+        gc = gspread.authorize(credentials)
+
+        print("The following sheets are available")
+        for sheet in gc.openall():
+                print("{} - {}".format(sheet.title, sheet.id))
+
+
+        # Open up the workbook based on the spreadsheet name
+        workbook = gc.open(sheet_name)
+
+        # Get the first sheet
+        worksheet = workbook.worksheet('Calculations')
+
+        return worksheet
 
 
 # def make_data_viz(df):
@@ -81,26 +104,38 @@ def get_forms_data():
 #         # sts = os.waitpid(p.pid, 0)
 #         return None
 
+# def generate_output_message(df):
+#         """
+#         Generates messages for the output based on the processed data.
+#         :param df: {pandas.DataFrame}
+#         :return: {string}
+#         """
+#         counted = df.iloc[:, 2].value_counts()
+#         total = counted.sum(axis=0)
+#         percentage_correct = float(counted.ix['Si']) / total
+#         if percentage_correct > 0.6:
+#                 output_string = 'Yes'
+#         else:
+#                 output_string = 'No'
+#         return output_string
 
-def generate_output_message(df):
+
+def generate_output_sequence(ws):
         """
         Generates messages for the output based on the processed data.
-        :param df: {pandas.DataFrame}
+        :param ws: {worksheet}
         :return: {string}
         """
-        counted = df.iloc[:, 2].value_counts()
-        total = counted.sum(axis=0)
-        percentage_correct = float(counted.ix['Si']) / total
-        if percentage_correct > 0.6:
-                output_string = 'Yes'
-        else:
-                output_string = 'No'
+        output_string = '';
+        for i in range(1, 8):
+                print(ws.cell(1, i).value)
+                output_string += str( 1 if float(ws.cell(1, i).value) > 0.5 else 0)
         return output_string
 
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 8079  # Make sure it's within the > 1024 $$ <65535 range
+        port = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -115,9 +150,10 @@ if __name__ == '__main__':
                         if data == 'stop':
                                 break
 
-                        df = get_forms_data()
+                        # df = get_forms_data()
+                        ws = get_ws(SPREADSHEET)
 
-                        output = generate_output_message(df)
+                        output = generate_output_sequence(ws)
                         # make_data_viz(df)
 
                         c.send(output.encode('utf-8'))
