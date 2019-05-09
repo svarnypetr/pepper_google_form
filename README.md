@@ -60,6 +60,9 @@ at given path: `virtualenv --python=/path/to/python/bin env`
 In order to upload the image to Pepper, we can use `scp`. Example guide is [here](http://www.hypexr.org/linux_scp_help.php).
 * `scp image.png your_username@PEPPER_IP:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.jpg`
 
+### Coding message
+We have a set of binary questions according to the current setup. The results of these questions are binarized into a sequence
+that is then interpreted by the Choregraphe so that Pepper vocally comments on the results.
 
 ### Prelaunch Checklist
 
