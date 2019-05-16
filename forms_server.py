@@ -104,21 +104,6 @@ def get_ws(sheet_name):
 #         # sts = os.waitpid(p.pid, 0)
 #         return None
 
-# def generate_output_message(df):
-#         """
-#         Generates messages for the output based on the processed data.
-#         :param df: {pandas.DataFrame}
-#         :return: {string}
-#         """
-#         counted = df.iloc[:, 2].value_counts()
-#         total = counted.sum(axis=0)
-#         percentage_correct = float(counted.ix['Si']) / total
-#         if percentage_correct > 0.6:
-#                 output_string = 'Yes'
-#         else:
-#                 output_string = 'No'
-#         return output_string
-
 
 def generate_output_sequence(ws):
         """
@@ -127,9 +112,13 @@ def generate_output_sequence(ws):
         :return: {string}
         """
         output_string = '';
-        for i in range(1, 8):
-                print(ws.cell(1, i).value)
-                output_string += str( 1 if float(ws.cell(1, i).value) > 0.5 else 0)
+
+        # loop through first row until you find an empty cell
+        i = 1
+        while not (ws.cell(1, i).value == ""):
+                # each cell we turn the numbers into percent without decimal value, % will be then our separator
+                output_string += "{:.0%}".format(float(ws.cell(1, i).value))
+                i += 1
         return output_string
 
 
