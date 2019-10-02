@@ -116,6 +116,12 @@ def generate_output_sequence(ws):
         # loop through first row until you find an empty cell
         i = 1
         while not (ws.cell(1, i).value == ""):
+                # We read the question and add the question, if any. We keep % as separator.
+                if ws.cell(2, i).value:
+                        output_string += ws.cell(3, i).value + "%"
+                # We read the answer and add it, if any. We keep % as separator.
+                if ws.cell(3, i).value:
+                        output_string += ws.cell(3, i).value + "%"
                 # each cell we turn the numbers into percent without decimal value, % will be then our separator
                 output_string += "{:.0%}".format(float(ws.cell(1, i).value))
                 i += 1
