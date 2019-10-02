@@ -30,9 +30,13 @@ class MyClass(GeneratedClass):
 
         # we now iterate through the list only until the before last member
         elif self.position < len(self._input_list)-2:
-            self.answer = "was answered correctly by {} percent.".format(self._input_list[self.position])
+            self.answer = "was {}.".format(self._input_list[self.position])
             self.position += 1
-            self.output_answer("Question " + str(self.position) + " " + self.answer)
+            self.answer = self.answer + "The correct answer was {} .".format(self._input_list[self.position])
+            self.position += 1
+            self.answer = self.answer + "It was answered correctly by {} percent.".format(self._input_list[self.position])
+            self.position += 1
+            self.output_answer("Question " + str(self.position/3) + " " + self.answer)
 
         elif self.position == len(self._input_list)-2:
             self.answer = "the answers were on {} percent correct.".format(self._input_list[self.position])
