@@ -49,8 +49,8 @@ class MyClass(GeneratedClass):
         '2%2%'.split('%') this split leads to the list ['2', '2', ''],
         therefore we remove the last member right-away by saying "all except the last one" -> [:-1]
         """
-        processed_string = _input_str.split('%')[:-1]
-        self._input_list = processed_string
+        processed_list = _input_str.split('%')[:-1]
+        self._input_list = processed_list
         self.position = -1
         self.code()
         pass

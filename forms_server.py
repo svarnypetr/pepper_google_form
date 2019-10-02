@@ -50,12 +50,12 @@ def get_forms_data():
         # The data comes in through a dictionary so we can not assume order stays the
         # same so must name each column
         # Currently columns are renamed without knowing their names in order to work with any form
-        column_names_original = list(data)
-        column_names = {}
-        for name in column_names_original:
-            column_names[name] = name.lower().replace(' ', '')
+        column_names_original = list(data)  # TODO: test, maybe superfluous
+        column_names = {}  # TODO: test, maybe superfluous
+        for name in column_names_original:  # TODO: test, maybe superfluous
+            column_names[name] = name.lower().replace(' ', '')    # TODO: test, maybe superfluous
 
-        data.rename(columns=column_names, inplace=True)
+        data.rename(columns=column_names, inplace=True)  # TODO: test, maybe superfluous
         # data.timestamp = pd.to_datetime(data.timestamp)
 
         # NOTE: This code will allow us to access/work with data from the last 2 minutes
@@ -128,7 +128,7 @@ if __name__ == '__main__':
 
         s = socket.socket()
         s.bind((host, port))
-        NUMBER_OF_FORMS = 5
+        NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
         while run_count < NUMBER_OF_FORMS:
                 s.listen(1)
