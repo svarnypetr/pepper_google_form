@@ -19,7 +19,7 @@ API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
-SPREADSHEET = "11 lesson (Responses)"
+SPREADSHEET = "valutazione_1 (Responses)"
 
 
 def get_forms_data():
@@ -111,14 +111,14 @@ def generate_output_sequence(ws):
         :param ws: {worksheet}
         :return: {string}
         """
-        output_string = '';
+        output_string = ''
 
         # loop through first row until you find an empty cell
         i = 1
         while not (ws.cell(1, i).value == ""):
                 # We read the question and add the question, if any. We keep % as separator.
                 if ws.cell(2, i).value:
-                        output_string += ws.cell(3, i).value + "%"
+                        output_string += ws.cell(2, i).value + "%"
                 # We read the answer and add it, if any. We keep % as separator.
                 if ws.cell(3, i).value:
                         output_string += ws.cell(3, i).value + "%"
