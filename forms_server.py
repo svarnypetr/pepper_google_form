@@ -43,7 +43,6 @@ def get_forms_data():
 
         # Extract all data into a dataframe
         data = pd.DataFrame(sheet.get_all_records())
-        import ipdb; ipdb.set_trace()
 
         # Do some minor cleanups on the data
         # Rename the columns to make it easier to manipulate
