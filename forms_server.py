@@ -2,7 +2,6 @@ from __future__ import print_function
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
-# import matplotlib.pyplot as plt
 import json
 import socket
 import subprocess
@@ -44,6 +43,7 @@ def get_forms_data():
 
         # Extract all data into a dataframe
         data = pd.DataFrame(sheet.get_all_records())
+        import ipdb; ipdb.set_trace()
 
         # Do some minor cleanups on the data
         # Rename the columns to make it easier to manipulate
@@ -90,21 +90,6 @@ def get_ws(sheet_name):
         return worksheet
 
 
-# def make_data_viz(df):
-#         """
-#         Based on processed data generates a histogram that is then saved and scp-d to Pepper.
-#         :param df: {pandas.DataFrame}
-#         :return: None
-#         """
-#         fig, ax = plt.subplots()
-#         image_name = 'image.png'
-#         fig.savefig(image_name)
-#         # pepper_img_location = "nao@10.10.60.137:/home/nao/.local/share/PackageManager/apps/connectgoogleforms-00573d/html/image.png"
-#         # p = subprocess.Popen(['scp', image_name, pepper_img_location])
-#         # sts = os.waitpid(p.pid, 0)
-#         return None
-
-
 def generate_output_sequence(ws):
         """
         Generates messages for the output based on the processed data.
@@ -145,11 +130,9 @@ if __name__ == '__main__':
                         if data == 'stop':
                                 break
 
-                        # df = get_forms_data()
                         ws = get_ws(SPREADSHEET)
 
                         output = generate_output_sequence(ws)
-                        # make_data_viz(df)
 
                         c.send(output.encode('utf-8'))
 

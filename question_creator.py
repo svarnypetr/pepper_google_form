@@ -7,17 +7,16 @@ class MyClass(GeneratedClass):
 
 
     def onLoad(self):
-        #put initialization code here
+        #  put initialization code here
         self.position = -1
         self._input_list = []
         pass
 
     def onUnload(self):
-        #put clean-up code here
+        #  put clean-up code here
         self.position = "terminated"
         self._input_list = []
         pass
-
 
     def code(self):
         self.logger.info(self.position)
@@ -25,27 +24,26 @@ class MyClass(GeneratedClass):
         if self.position == -1:
             # I add the last value from the list but divide it by 100, it were %
             # I am using the format notation that is a little better and more versatile, read, google and learn
-            self.output_answer("Questions were answered by {} students".format(int(self._input_list[self.position])/100))
+            self.output_answer("Ho ricevuto, {} risposte.".format(int(self._input_list[self.position])/100))
             self.position = 0
 
         # we now iterate through the list only until the before last member
         elif self.position < len(self._input_list)-2:
-            self.answer = "was {}.".format(self._input_list[self.position])
+            self.answer = "era {}.".format(self._input_list[self.position])
             self.position += 1
-            self.answer = self.answer + "The correct answer was {} .".format(self._input_list[self.position])
+            self.answer = self.answer + "La risposta corretta è stata {} .".format(self._input_list[self.position])
             self.position += 1
-            self.answer = self.answer + "It was answered correctly by {} percent.".format(self._input_list[self.position])
+            self.answer = self.answer + "è stata data la risposta esatta dal {} percent di voi.".format(self._input_list[self.position])
             self.position += 1
-            self.output_answer("Question " + str(self.position/3) + " " + self.answer)
+            self.output_answer("La domanda " + str(self.position/3) + " " + self.answer)
 
         elif self.position == len(self._input_list)-2:
-            self.answer = "the answers were on {} percent correct.".format(self._input_list[self.position])
+            self.answer = "In tutto le vostre risposte esatte sono state il {} percento.".format(self._input_list[self.position])
             self.onStopped()
-            self.output_answer("Overall " + self.answer)
+            self.output_answer("In tutto le vostre risposte esatte sono state il " + self.answer)
 
         else:
             pass
-
 
     def onInput_onString(self, _input_str):
         """
