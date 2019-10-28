@@ -18,7 +18,7 @@ API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
-SPREADSHEET = "valutazione_1 (Responses)"
+SPREADSHEET = "Lez29_10_19 (Responses)"
 
 
 def get_forms_data():
@@ -84,7 +84,7 @@ def get_ws(sheet_name):
         workbook = gc.open(sheet_name)
 
         # Get the first sheet
-        worksheet = workbook.worksheet('Calculations')
+        worksheet = workbook.worksheet('Calculations').get_all_values()
 
         return worksheet
 
@@ -97,18 +97,18 @@ def generate_output_sequence(ws):
         """
         output_string = ''
 
-        # loop through first row until you find an empty cell
-        i = 1
-        while not (ws.cell(1, i).value == ""):
+        first_row_length = len(ws[0])
+        for i in range(first_row_length - 2):
+                # import ipdb;                ipdb.set_trace()
                 # We read the question and add the question, if any. We keep % as separator.
-                if ws.cell(2, i).value:
-                        output_string += ws.cell(2, i).value + "%"
+                if ws[1][i]:
+                        output_string += ws[1][i] + "%"
                 # We read the answer and add it, if any. We keep % as separator.
-                if ws.cell(3, i).value:
-                        output_string += ws.cell(3, i).value + "%"
+                if ws[2][i]:
+                        output_string += ws[2][i] + "%"
                 # each cell we turn the numbers into percent without decimal value, % will be then our separator
-                output_string += "{:.0%}".format(float(ws.cell(1, i).value))
-                i += 1
+                output_string += "{:.0%}".format(float(ws[0][i]))
+        output_string += "{:.0%}".format(float(ws[0][-2])) + "{:.0%}".format(float(ws[0][-1]))
         return output_string
 
 
