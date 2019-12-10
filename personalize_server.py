@@ -18,7 +18,7 @@ API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
-SPREADSHEET = "Lez10 (Responses)"
+SPREADSHEET = "Lez29_10_19 (Responses)"
 
 
 def get_forms_data():
@@ -39,7 +39,7 @@ def get_forms_data():
         workbook = gc.open(SPREADSHEET)
 
         # Get the first sheet
-        sheet = workbook.worksheet('Calculations')
+        sheet = workbook.worksheet('Form Responses 1')
 
         # Extract all data into a dataframe
         data = pd.DataFrame(sheet.get_all_records())
@@ -49,6 +49,12 @@ def get_forms_data():
         # The data comes in through a dictionary so we can not assume order stays the
         # same so must name each column
         # Currently columns are renamed without knowing their names in order to work with any form
+        # column_names_original = list(data)  # TODO: test, maybe superfluous
+        # column_names = {}  # TODO: test, maybe superfluous
+        # for name in column_names_original:  # TODO: test, maybe superfluous
+        #     column_names[name] = name.lower().replace(' ', '')    # TODO: test, maybe superfluous
+
+        # data.rename(columns=column_names, inplace=True)  # TODO: test, maybe superfluous
         # data.timestamp = pd.to_datetime(data.timestamp)
 
         # NOTE: This code will allow us to access/work with data from the last 2 minutes
@@ -108,7 +114,7 @@ def generate_output_sequence(ws):
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 6553  # Make sure it's within the > 1024 $$ <65535 range
+        port = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -131,5 +137,3 @@ if __name__ == '__main__':
 
                 c.close()
                 run_count += 1
-                if data == 'stop':
-                        break

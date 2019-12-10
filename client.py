@@ -5,7 +5,7 @@ import socket
 
 def client():
     host = socket.gethostname()  # get local machine name
-    port = 6555  # Make sure it's within the > 1024 $$ <65535 range
+    port = 6553  # Make sure it's within the > 1024 $$ <65535 range
 
     s = socket.socket()
     s.connect((host, port))
