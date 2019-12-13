@@ -6,13 +6,14 @@ import json
 import socket
 import subprocess
 import os
+from unidecode import unidecode
 
 SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
 API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez11 (Responses)"
-PORT = 6554  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_ws(sheet_name):
@@ -43,6 +44,10 @@ def get_ws(sheet_name):
         return student_df, general_df
 
 
+def remove_non_ascii(text):
+    return unidecode(text)
+
+
 def generate_output_sequence(students, general, id):
         """
         Generates messages for the output based on the processed data.
@@ -62,9 +67,9 @@ def generate_output_sequence(students, general, id):
                 if general.iloc[1, i]:
                         output_string += str(general.iloc[1, i]) + "%"
                 # We add his answer
-                output_string += u' '.join(id_row.iloc[0, 2*i + 4]).encode('utf-8') + "%"
+                output_string += remove_non_ascii(id_row.iloc[0, 2*i + 4]).encode("utf-8") + "%"
                 # We add his result
-                output_string += u' '.join(id_row.iloc[0, 2*i + 5]).encode('utf-8') + "%"
+                output_string += remove_non_ascii(id_row.iloc[0, 2*i + 5]).encode("utf-8") + "%"
         return output_string
 
 
