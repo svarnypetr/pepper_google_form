@@ -10,15 +10,9 @@ import os
 SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
-# This needs to be your API key file
-# NOTE: Currently I have a different key file, so I keep it commented
-# API_KEY_FILE = "Macerata-b7cd0349db2e.json"
-# API_KEY_FILE = "macerata-1549040199941-9b1795f038ec.json"
 API_KEY_FILE = "key.json"
-
-
-# The requested spreadsheet
-SPREADSHEET = "Lez29_10_19 (Responses)"
+SPREADSHEET = "Lez11 (Responses)"
+PORT = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_forms_data():
@@ -42,28 +36,9 @@ def get_forms_data():
         sheet = workbook.worksheet('Form Responses 1')
 
         # Extract all data into a dataframe
-        data = pd.DataFrame(sheet.get_all_records())
+        sheet_data = pd.DataFrame(sheet.get_all_records())
 
-        # Do some minor cleanups on the data
-        # Rename the columns to make it easier to manipulate
-        # The data comes in through a dictionary so we can not assume order stays the
-        # same so must name each column
-        # Currently columns are renamed without knowing their names in order to work with any form
-        # column_names_original = list(data)  # TODO: test, maybe superfluous
-        # column_names = {}  # TODO: test, maybe superfluous
-        # for name in column_names_original:  # TODO: test, maybe superfluous
-        #     column_names[name] = name.lower().replace(' ', '')    # TODO: test, maybe superfluous
-
-        # data.rename(columns=column_names, inplace=True)  # TODO: test, maybe superfluous
-        # data.timestamp = pd.to_datetime(data.timestamp)
-
-        # NOTE: This code will allow us to access/work with data from the last 2 minutes
-        # pd.Timestamp.now()
-        # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
-
-        # Prints the first 10 lines of results
-
-        return data
+        return sheet_data
 
 
 def get_ws(sheet_name):
@@ -78,7 +53,6 @@ def get_ws(sheet_name):
         print("The following sheets are available")
         for sheet in gc.openall():
                 print("{} - {}".format(sheet.title, sheet.id))
-
 
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)
@@ -114,7 +88,7 @@ def generate_output_sequence(ws):
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 6555  # Make sure it's within the > 1024 $$ <65535 range
+        port = PORT  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
         s.bind((host, port))
@@ -137,3 +111,5 @@ if __name__ == '__main__':
 
                 c.close()
                 run_count += 1
+                if data == 'stop':
+                        break

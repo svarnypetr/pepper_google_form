@@ -1,11 +1,15 @@
+"""
+Dummy client serves for testing
+"""
+
 import socket
 
-## Dummy client serves for testing
+PORT = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def client():
-    host = socket.gethostname()  # get local machine name
-    port = 6553  # Make sure it's within the > 1024 $$ <65535 range
+    host = socket.gethostname()
+    port = PORT
 
     s = socket.socket()
     s.connect((host, port))
