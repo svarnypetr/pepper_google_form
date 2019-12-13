@@ -16,7 +16,7 @@ def client():
 
     received_message = False
     while not received_message:
-        s.send('give me data'.encode('utf-8'))
+        s.send('81513'.encode('utf-8'))
         received_message = s.recv(1024).decode('utf-8')
         print('Received from server: ' + received_message)
         s.send('stop'.encode('utf-8'))
