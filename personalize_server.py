@@ -15,7 +15,7 @@ SPREADSHEET = "Lez11 (Responses)"
 PORT = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
 
-def get_ws(sheet_name, worksheet_name):
+def get_ws(sheet_name):
         # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
         # Load in the secret JSON key (must be a service account)
         # json_key = json.load(open(API_KEY_FILE))
@@ -32,35 +32,39 @@ def get_ws(sheet_name, worksheet_name):
         workbook = gc.open(sheet_name)
 
         # Get selected worksheet
-        worksheet = workbook.worksheet(worksheet_name).get_all_values()
-        ws_df = pd.DataFrame(worksheet)
-        ws_df.columns = ws_df.iloc[0]
-        ws_df = ws_df.drop(ws_df.index[0])
+        worksheet = workbook.worksheet('Form Responses 1').get_all_values()
+        student_df = pd.DataFrame(worksheet)
+        student_df.columns = student_df.iloc[0]
+        student_df = student_df.drop(student_df.index[0])
 
-        return ws_df
+        worksheet = workbook.worksheet('Calculations').get_all_values()
+        general_df = pd.DataFrame(worksheet)
+
+        return student_df, general_df
 
 
-def generate_output_sequence(ws, id):
+def generate_output_sequence(students, general, id):
         """
         Generates messages for the output based on the processed data.
-        :param ws: {worksheet}
+        :param students: {dataframe}
+        :param general: {dataframe}
+        :param id: {str} identifying the student
         :return: {string}
         """
         output_string = ''
-        id_row = ws.loc[ws['matricola'] == id]
+        id_row = students.loc[students['matricola'] == id]
 
-        # first_row_length = len(ws[0])
-        # for i in range(first_row_length - 2):
-        #         # We read the question and add the question, if any. We keep % as separator.
-        #         if ws[1][i]:
-        #                 output_string += ws[1][i] + "%"
-        #         # We read the answer and add it, if any. We keep % as separator.
-        #         if ws[2][i]:
-        #                 output_string += ws[2][i] + "%"
-        #         # each cell we turn the numbers into percent without decimal value, % will be then our separator
-        # #         output_string += "{:.0%}".format(float(ws[0][i]))
-        # # output_string += ws[0][-2] + ws[0][-1]
-        output_string = str(id_row)
+        # We get the student name
+        output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%"
+
+        for i in range(len(general.columns) - 2):
+                # We add the question
+                if general.iloc[1, i]:
+                        output_string += str(general.iloc[1, i]) + "%"
+                # We add his answer
+                output_string += str(id_row.iloc[0, 2*i + 4]) + "%"
+                # We add his result
+                output_string += str(id_row.iloc[0, 2*i + 5]) + "%"
         return output_string
 
 
@@ -81,10 +85,10 @@ if __name__ == '__main__':
                         if client_data == 'stop':
                                 break
 
-                        ws_df = get_ws(SPREADSHEET, 'Form Responses 1')
+                        students_df, general_df = get_ws(SPREADSHEET)
                         # ws_calculations_df = get_ws(SPREADSHEET, 'Calculations')
 
-                        output = generate_output_sequence(ws_df, client_data)
+                        output = generate_output_sequence(students_df, general_df, client_data)
 
                         c.send(output.encode('utf-8'))
 
