@@ -26,20 +26,20 @@ class MyClass(GeneratedClass):
             # I am using the format notation that is a little better and more versatile, read, google and learn
             self.output_answer("Hello {}.".format(self._input_list[self.position]))
             self.position = 1
+
         while self.position < len(self._input_list):
         # we now iterate through the list with different behaviour for different parts of the list
-            self.answer = "The question was {}.".format(self._input_list[self.position])
+            self.answer += "The question was {}.".format(self._input_list[self.position])
             self.position += 1
-            self.answer = self.answer + "Your answer was {}.".format(self._input_list[self.position])
+            self.answer += "Your answer was {}.".format(self._input_list[self.position])
             self.position += 1
             if self._input_list[self.position] == 1:
-                self.answer = self.answer + "That answer was correct."
+                self.answer += "That answer was correct."
             else:
-                self.answer = self.answer + "That answer was not correct. The correct answer was: {}".format(
+                self.answer += "That answer was not correct. The correct answer was: {}".format(
                     self._input_list[self.position])
             self.position += 1
-        else:
-            pass
+        self.output_answer(self.answer)
 
     def onInput_onString(self, _input_str):
         """
