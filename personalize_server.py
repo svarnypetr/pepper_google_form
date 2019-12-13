@@ -69,7 +69,10 @@ def generate_output_sequence(students, general, id):
                 # We add his answer
                 output_string += remove_non_ascii(id_row.iloc[0, 2*i + 4]).encode("utf-8") + "%"
                 # We add his result
-                output_string += remove_non_ascii(id_row.iloc[0, 2*i + 5]).encode("utf-8") + "%"
+                if id_row.iloc[0, 2*i + 5] == 1:
+                        output_string += str(id_row.iloc[0, 2*i + 5]) + "%"
+                else:
+                        output_string += str(general.iloc[2, i]) + "%"
         return output_string
 
 

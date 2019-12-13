@@ -21,27 +21,23 @@ class MyClass(GeneratedClass):
     def code(self):
         self.logger.info(self.position)
 
-        if self.position == -1:
+        if self.position == 0:
             # I add the last value from the list but divide it by 100, it were %
             # I am using the format notation that is a little better and more versatile, read, google and learn
-            self.output_answer("Ho ricevuto, {} risposte.".format(int(self._input_list[self.position])/100))
-            self.position = 0
-
-        # we now iterate through the list only until the before last member
-        elif self.position < len(self._input_list)-2:
-            self.answer = "era {}.".format(self._input_list[self.position])
+            self.output_answer("Hello {}.".format(self._input_list[self.position]))
+            self.position = 1
+        while self.position < len(self._input_list):
+        # we now iterate through the list with different behaviour for different parts of the list
+            self.answer = "The question was {}.".format(self._input_list[self.position])
             self.position += 1
-            self.answer = self.answer + "La risposta corretta è stata {} .".format(self._input_list[self.position])
+            self.answer = self.answer + "Your answer was {}.".format(self._input_list[self.position])
             self.position += 1
-            self.answer = self.answer + "è stata data la risposta esatta dal {} percent di voi.".format(self._input_list[self.position])
+            if self._input_list[self.position] == 1:
+                self.answer = self.answer + "That answer was correct."
+            else:
+                self.answer = self.answer + "That answer was not correct. The correct answer was: {}".format(
+                    self._input_list[self.position])
             self.position += 1
-            self.output_answer("La domanda " + str(self.position/3) + " " + self.answer)
-
-        elif self.position == len(self._input_list)-2:
-            self.answer = "In tutto le vostre risposte esatte sono state il {} percento.".format(self._input_list[self.position])
-            self.onStopped()
-            self.output_answer("In tutto le vostre risposte esatte sono state il " + self.answer)
-
         else:
             pass
 
@@ -53,7 +49,7 @@ class MyClass(GeneratedClass):
         """
         processed_list = _input_str.split('%')[:-1]
         self._input_list = processed_list
-        self.position = -1
+        self.position = 0
         self.code()
         pass
 
