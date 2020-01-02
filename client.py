@@ -4,7 +4,7 @@ Dummy client serves for testing
 
 import socket
 
-PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def pepper_processing(_input_str):
@@ -41,7 +41,7 @@ def client():
 
     received_message = False
     while not received_message:
-        s.send('81513'.encode('utf-8'))
+        s.send('Remine_Letizia'.encode('utf-8'))
         received_message = s.recv(1024).decode('utf-8')
         print('Received from server: ' + received_message)
         pepper_processing(received_message)
