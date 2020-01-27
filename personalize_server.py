@@ -13,7 +13,7 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
 
 API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez11 (Responses)"
-PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_ws(sheet_name):
@@ -48,17 +48,16 @@ def remove_non_ascii(text):
     return unidecode(text)
 
 
-def generate_output_sequence(students, general, last_first_name):
+def generate_output_sequence(students, general, id):
         """
         Generates messages for the output based on the processed data.
         :param students: {dataframe}
         :param general: {dataframe}
-        :param last_first_name: {str} the last name first name string in form lastname_firstname
+        :param id: {str} identifying the student
         :return: {string}
         """
         output_string = ''
-        last_name, first_name = last_first_name.split('_')
-        id_row = students.loc[(students['cognome'] == last_name) & (students['nome'] == first_name)]
+        id_row = students.loc[students['matricola'] == id]
 
         # We get the student name
         output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%"
