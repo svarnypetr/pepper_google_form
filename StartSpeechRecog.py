@@ -25,8 +25,8 @@ class MyClass(GeneratedClass):
             try:
                 recognized = rec.recognize_google(audio, language="it-IT")
                 text=recognized.encode('utf-8').strip()
-                match_pattern = r"[0-9]{5}"
-                if re.match(match_pattern, text):
+                match_pattern = r"^[0-9]{5}$"
+                if re.findall(match_pattern, text):
                     self.logger.info(text)
                     self.output_onTranslated(text)
                 else:

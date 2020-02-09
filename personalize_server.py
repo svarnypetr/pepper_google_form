@@ -6,6 +6,7 @@ import json
 import socket
 import subprocess
 import os
+import re
 from unidecode import unidecode
 
 SCOPE = ['https://spreadsheets.google.com/feeds',
@@ -13,7 +14,7 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
 
 API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez11 (Responses)"
-PORT = 6554  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_ws(sheet_name):
@@ -84,16 +85,18 @@ if __name__ == '__main__':
         s.bind((host, port))
         NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
+
+        matricola_pattern = r"^[0-9]{5}$"
+
         while run_count < NUMBER_OF_FORMS:
                 s.listen(1)
                 c, addr = s.accept()
                 print("Connection from: " + str(addr))
                 client_data = c.recv(1024).decode('utf-8')
 
-                while client_data == '81513':
-                        if client_data == 'stop':
-                                break
+                is_matched = re.findall(matricola_pattern, client_data)
 
+                if is_matched:
                         students_df, general_df = get_ws(SPREADSHEET)
 
                         output = generate_output_sequence(students_df, general_df, client_data)
@@ -102,5 +105,12 @@ if __name__ == '__main__':
                         client_data = ''
                         c.close()
                 run_count += 1
+
+                if not is_matched:
+                        output = "matricola_error"
+                        print(output)
+                        c.send(output.encode('utf-8'))
+                        c.close()
+
                 if client_data == 'stop':
                         break
