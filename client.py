@@ -4,31 +4,37 @@ Dummy client serves for testing
 
 import socket
 
-PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def pepper_processing(_input_str):
     _input_list = _input_str.split('%')[:-1]
     position = 0
 
+    hello_statement = ''
     if position == 0:
         # I add the last value from the list but divide it by 100, it were %
         # I am using the format notation that is a little better and more versatile, read, google and learn
-        print("Hello {}.".format(_input_list[position]))
+        hello_statement += "Hello {}.".format(_input_list[position])
         position = 1
     answer = ''
     while position < len(_input_list):
+        single_response = ''
         # we now iterate through the list with different behaviour for different parts of the list
-        answer += "The question was {}.".format(_input_list[position])
+        question_content = _input_list[position]
         position += 1
-        answer += "Your answer was {}.".format(_input_list[position])
+        single_response += "Your answer was {}.".format(_input_list[position])
         position += 1
         if _input_list[position] == 1:
-            answer += "That answer was correct."
+            single_response += "That answer was correct."
         else:
-            answer += "That answer was not correct. The correct answer was: {}".format(_input_list[position])
+            single_response += "That answer was not correct. The correct answer was: {}".format(_input_list[position])
         position += 1
+        question_number = (position-1)/3
+        single_response = "The question {} was {}.".format(question_number, question_content) + single_response
+        answer += single_response
 
+    answer = hello_statement + answer
     print(answer)
 
 
@@ -43,7 +49,7 @@ def client():
     while not received_message:
         s.send('81513'.encode('utf-8'))
         received_message = s.recv(1024).decode('utf-8')
-        print('Received from server: ' + received_message)
+        # print('Received from server: ' + received_message)
         pepper_processing(received_message)
 #       this allows to stop the server if needed
 #        s.send('stop'.encode('utf-8'))
