@@ -88,19 +88,19 @@ if __name__ == '__main__':
                 s.listen(1)
                 c, addr = s.accept()
                 print("Connection from: " + str(addr))
-                while True:
-                        client_data = c.recv(1024).decode('utf-8')
+                client_data = c.recv(1024).decode('utf-8')
+
+                while client_data == '81513':
                         if client_data == 'stop':
                                 break
 
                         students_df, general_df = get_ws(SPREADSHEET)
-                        # ws_calculations_df = get_ws(SPREADSHEET, 'Calculations')
 
                         output = generate_output_sequence(students_df, general_df, client_data)
 
                         c.send(output.encode('utf-8'))
-
-                c.close()
+                        client_data = ''
+                        c.close()
                 run_count += 1
                 if client_data == 'stop':
                         break

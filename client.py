@@ -45,8 +45,9 @@ def client():
         received_message = s.recv(1024).decode('utf-8')
         print('Received from server: ' + received_message)
         pepper_processing(received_message)
-        s.send('stop'.encode('utf-8'))
-    s.close()
+#       this allows to stop the server if needed
+#        s.send('stop'.encode('utf-8'))
+        s.close()
 
 
 if __name__ == '__main__':

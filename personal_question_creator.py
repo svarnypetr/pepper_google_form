@@ -5,7 +5,6 @@ class MyClass(GeneratedClass):
         self._input_list = ""
         self.answer = ""
 
-
     def onLoad(self):
         #  put initialization code here
         self.position = -1
@@ -28,7 +27,7 @@ class MyClass(GeneratedClass):
             self.position = 1
 
         while self.position < len(self._input_list):
-        # we now iterate through the list with different behaviour for different parts of the list
+            # we now iterate through the list with different behaviour for different parts of the list
             self.answer += "The question was {}.".format(self._input_list[self.position])
             self.position += 1
             self.answer += "Your answer was {}.".format(self._input_list[self.position])
