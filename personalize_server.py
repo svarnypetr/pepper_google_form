@@ -86,7 +86,7 @@ if __name__ == '__main__':
         NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
 
-        matricola_pattern = r"^[0-9]{5}$"
+        matricola_pattern = r"^[0-9]{5}"
 
         while run_count < NUMBER_OF_FORMS:
                 s.listen(1)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
                 if not is_matched:
                         output = "matricola_error"
-                        print(output)
+                        print(output, "attempted to send: {}".format(client_data))
                         c.send(output.encode('utf-8'))
                         c.close()
 

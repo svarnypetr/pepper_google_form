@@ -24,7 +24,7 @@ class MyClass(GeneratedClass):
         if self.position == 0:
             # I add the last value from the list but divide it by 100, it were %
             # I am using the format notation that is a little better and more versatile, read, google and learn
-            hello_statement += "Hello {}.".format(self._input_list[position])
+            hello_statement += "Hello {}.".format(self._input_list[self.position])
             self.position = 1
 
         while self.position < len(self._input_list):
