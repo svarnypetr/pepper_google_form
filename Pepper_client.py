@@ -10,7 +10,7 @@ class MyClass(GeneratedClass):
     def client(self, name):
         import socket
         port = 6555  # Is this port the same as on your computer, i.e. the server?
-        host_computer_IP = '192.168.0.101' # Is this the IP of your computer, i.e. the server?
+        host_computer_IP = '192.168.0.101'  # Is this the IP of your computer, i.e. the server?
         s = socket.socket()
         s.connect((host_computer_IP, port))
         received_message = False
@@ -20,7 +20,10 @@ class MyClass(GeneratedClass):
             received_message = s.recv(1024).decode('utf-8')
             #self.logger.info(received_message)
             self.logger.info("Received message  " + str(received_message))
-            self.Result(str(received_message))
+            if received_message == 'matricola_error':
+                self.failed_matricola()
+            else:
+                self.Result(str(received_message))
             #s.send('stop'.encode('utf-8'))
         s.close()
 

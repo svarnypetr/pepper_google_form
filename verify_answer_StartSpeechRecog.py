@@ -1,9 +1,7 @@
 import sys; sys.path.insert(0, "/home/nao/.local/lib/python2.7/site-packages/")
 import speech_recognition as sr
-import re
 #from gtts import gTTS  - Google text to speech
 #import pygame
-
 
 class MyClass(GeneratedClass):
     def __init__(self):
@@ -25,14 +23,12 @@ class MyClass(GeneratedClass):
             audio = rec.record(source)
             try:
                 recognized = rec.recognize_google(audio, language="it-IT")
-                text = recognized.encode('utf-8').strip()
-                match_pattern = r"^[0-9]{5}$"
-                if re.findall(match_pattern, text):
-                    self.logger.info(text)
+                text=recognized.encode('utf-8').strip()
+                self.logger.info(text)
+                if text == 'yes':
                     self.output_onTranslated(text)
                 else:
-                    self.logger.info("Does not match the matricola pattern.")
-                    self.onFailedTranslation()
+                    self.output_onFailedTranslation()
             except sr.RequestError:
                 # API was unreachable or unresponsive
                 self.logger.info("API unavailable")
