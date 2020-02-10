@@ -21,7 +21,7 @@ class MyClass(GeneratedClass):
             #self.logger.info(received_message)
             self.logger.info("Received message  " + str(received_message))
             self.Result(str(received_message))
-            s.send('stop'.encode('utf-8'))
+            #s.send('stop'.encode('utf-8'))
         s.close()
 
     def onLoad(self):
