@@ -34,7 +34,7 @@ class MyClass(GeneratedClass):
             self.position += 1
             single_response += "Your answer was {}.".format(self._input_list[self.position])
             self.position += 1
-            if self._input_list[self.position] == 1:
+            if _input_list[position] == _input_list[position - 1]::
                 single_response += "That answer was correct."
             else:
                 single_response += "That answer was not correct. The correct answer was: {}".format(
