@@ -17,10 +17,13 @@ class MyClass(GeneratedClass):
         if( bOutput ):
             self.ok = [False]*2
             self.signalsReceived()
-            self.output(self.input)
+            self.output(self.matricola)
 
     def onInput_signal1(self):
         self.onStart(1)
 
     def onInput_signal2(self):
         self.onStart(2)
+
+    def onInput_input(self, _input_str):
+        self.matricola = _input_str
