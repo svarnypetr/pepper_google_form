@@ -25,7 +25,7 @@ def pepper_processing(_input_str):
         position += 1
         single_response += "Your answer was {}.".format(_input_list[position])
         position += 1
-        if _input_list[position] == 1:
+        if _input_list[position] == _input_list[position - 1]:
             single_response += "That answer was correct."
         else:
             single_response += "That answer was not correct. The correct answer was: {}".format(_input_list[position])
@@ -37,8 +37,7 @@ def pepper_processing(_input_str):
     answer = hello_statement + answer
     print(answer)
 
-
-def client():
+def client(stop=False):
     host = socket.gethostname()
     port = PORT
 
@@ -47,17 +46,22 @@ def client():
 
     received_message = False
     while not received_message:
-        s.send('81513'.encode('utf-8'))
-        received_message = s.recv(1024).decode('utf-8')
+        if stop:
+            s.send('stop'.encode('utf-8'))
+            break
+
+        s.send('80111'.encode('utf-8'))
+        received_message = s.recv(2048).decode('utf-8')
         # print('Received from server: ' + received_message)
         if received_message == 'matricola_error':
             print(received_message)
         else:
             pepper_processing(received_message)
-#       this allows to stop the server if needed
-#        s.send('stop'.encode('utf-8'))
         s.close()
+        if stop:
+            s.send('stop'.encode('utf-8'))
 
 
 if __name__ == '__main__':
+    # client(True)
     client()

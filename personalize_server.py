@@ -37,11 +37,10 @@ def get_ws(sheet_name):
         worksheet = workbook.worksheet('Form Responses 1').get_all_values()
         student_df = pd.DataFrame(worksheet)
         student_df.columns = student_df.iloc[0]
-        student_df = student_df.drop(student_df.index[0])
 
         worksheet = workbook.worksheet('Calculations').get_all_values()
         general_df = pd.DataFrame(worksheet)
-
+        print(student_df.head())
         return student_df, general_df
 
 
@@ -58,6 +57,7 @@ def generate_output_sequence(students, general, id):
         :return: {string}
         """
         output_string = ''
+        # import ipdb; ipdb.set_trace()
         id_row = students.loc[students['matricola'] == id]
 
         # We get the student name
@@ -68,12 +68,12 @@ def generate_output_sequence(students, general, id):
                 if general.iloc[1, i]:
                         output_string += str(general.iloc[1, i]) + "%"
                 # We add his answer
+                print(output_string)
                 output_string += remove_non_ascii(id_row.iloc[0, 2*i + 4]).encode("utf-8") + "%"
-                # We add his result
-                if id_row.iloc[0, 2*i + 5] == 1:
-                        output_string += str(id_row.iloc[0, 2*i + 5]) + "%"
-                else:
-                        output_string += str(general.iloc[2, i]) + "%"
+                # We add correct result
+                print(output_string)
+                output_string += str(general.iloc[2, i]) + "%"
+                print(output_string)
         return output_string
 
 
@@ -92,7 +92,7 @@ if __name__ == '__main__':
                 s.listen(1)
                 c, addr = s.accept()
                 print("Connection from: " + str(addr))
-                client_data = c.recv(1024).decode('utf-8')
+                client_data = c.recv(2048).decode('utf-8')
 
                 is_matched = re.findall(matricola_pattern, client_data)
 
