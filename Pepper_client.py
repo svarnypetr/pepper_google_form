@@ -17,7 +17,7 @@ class MyClass(GeneratedClass):
 
         while not received_message:
             s.send(name.encode('utf-8'))
-            received_message = s.recv(1024).decode('utf-8')
+            received_message = s.recv(2048).decode('utf-8')
             #self.logger.info(received_message)
             self.logger.info("Received message  " + str(received_message))
             if received_message == 'matricola_error':
