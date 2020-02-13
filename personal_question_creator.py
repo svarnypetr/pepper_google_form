@@ -2,7 +2,7 @@ class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
         self.position = -1
-        self._input_list = ""
+        self._input_list = []
         self.answer = ""
 
     def onLoad(self):
@@ -18,8 +18,6 @@ class MyClass(GeneratedClass):
         pass
 
     def code(self):
-        self.logger.info(self.position)
-
         hello_statement = ''
         if self.position == 0:
             # I add the last value from the list but divide it by 100, it were %

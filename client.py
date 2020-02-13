@@ -7,35 +7,55 @@ import socket
 PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
 
 
-def pepper_processing(_input_str):
-    _input_list = _input_str.split('%')[:-1]
-    position = 0
+class Pepper(object):
+    """
+    Pepper replacement class
+    """
+    def __init__(self):
+        self.position = -1
+        self._input_list = []
+        self.answer = ""
 
-    hello_statement = ''
-    if position == 0:
-        # I add the last value from the list but divide it by 100, it were %
-        # I am using the format notation that is a little better and more versatile, read, google and learn
-        hello_statement += "Hello {}.".format(_input_list[position])
-        position = 1
-    answer = ''
-    while position < len(_input_list):
-        single_response = ''
-        # we now iterate through the list with different behaviour for different parts of the list
-        question_content = _input_list[position]
-        position += 1
-        single_response += "Your answer was {}.".format(_input_list[position])
-        position += 1
-        if _input_list[position] == _input_list[position - 1]:
-            single_response += "That answer was correct."
-        else:
-            single_response += "That answer was not correct. The correct answer was: {}".format(_input_list[position])
-        position += 1
-        question_number = (position-1)/3
-        single_response = "The question {} was {}.".format(question_number, question_content) + single_response
-        answer += single_response
+    def onInput_onString(self, _input_str):
+        """
+        We need to split the input string based on the percent separator
+        '2%2%'.split('%') this split leads to the list ['2', '2', ''],
+        therefore we remove the last member right-away by saying "all except the last one" -> [:-1]
+        """
+        processed_list = _input_str.split('%')[:-1]
+        self._input_list = processed_list
+        self.position = 0
+        self.code()
+        pass
 
-    answer = hello_statement + answer
-    print(answer)
+    def code(self):
+        hello_statement = ''
+        if self.position == 0:
+            # I add the last value from the list but divide it by 100, it were %
+            # I am using the format notation that is a little better and more versatile, read, google and learn
+            hello_statement += "Hello {}.".format(self._input_list[self.position])
+            self.position = 1
+
+        while self.position < len(self._input_list):
+            single_response = ''
+            # we now iterate through the list with different behaviour for different parts of the list
+            question_content = self._input_list[self.position]
+            self.position += 1
+            single_response += "Your answer was {}.".format(self._input_list[self.position])
+            self.position += 1
+            if self._input_list[self.position] == self._input_list[self.position - 1]:
+                single_response += "That answer was correct."
+            else:
+                single_response += "That answer was not correct. The correct answer was: {}".format(
+                    self._input_list[self.position])
+            self.position += 1
+            question_number = (self.position - 1) / 3
+            single_response = "The question {} was {}.".format(question_number, question_content) + single_response
+            self.answer += single_response
+
+        self.answer = hello_statement + self.answer
+        print(self.answer)
+
 
 def client(stop=False):
     host = socket.gethostname()
@@ -43,6 +63,7 @@ def client(stop=False):
 
     s = socket.socket()
     s.connect((host, port))
+    pepper = Pepper()
 
     received_message = False
     while not received_message:
@@ -56,7 +77,8 @@ def client(stop=False):
         if received_message == 'matricola_error':
             print(received_message)
         else:
-            pepper_processing(received_message)
+            pepper.onInput_onString(received_message)
+            pepper.code()
         s.close()
         if stop:
             s.send('stop'.encode('utf-8'))

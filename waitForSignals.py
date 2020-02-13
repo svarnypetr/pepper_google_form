@@ -1,6 +1,7 @@
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self, False)
+        self.matricola = ''
 
     def onLoad(self):
         self.ok = [False]*2
