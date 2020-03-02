@@ -101,10 +101,10 @@ def generate_output_sequence(ws):
         for i in range(first_row_length - 2):
                 # We read the question and add the question, if any. We keep % as separator.
                 if ws[1][i]:
-                        output_string += remove_non_ascii(ws[1][i]) + "%"
+                        output_string += remove_non_ascii(ws[1][i]).encode("utf-8") + "%"
                 # We read the answer and add it, if any. We keep % as separator.
                 if ws[2][i]:
-                        output_string += remove_non_ascii(ws[2][i]) + "%"
+                        output_string += remove_non_ascii(ws[2][i]).encode("utf-8") + "%"
                 # each cell we turn the numbers into percent without decimal value, % will be then our separator
                 output_string += "{:.0%}".format(float(ws[0][i]))
         output_string += "{:.0%}".format(float(ws[0][-2])) + "{:.0%}".format(float(ws[0][-1]))
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         port = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
-        s.bind((host, port))
+        s.bind(('', port))
         NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
         while run_count < NUMBER_OF_FORMS:

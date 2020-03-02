@@ -65,7 +65,7 @@ def generate_output_sequence(students, general, id):
         for i in range(len(general.columns) - 2):
                 # We add the question
                 if general.iloc[1, i]:
-                        output_string += str(general.iloc[1, i]) + "%"
+                        output_string += remove_non_ascii(general.iloc[1, i]).encode("utf-8") + "%"
                 # We add his answer
                 output_string += remove_non_ascii(id_row.iloc[0, 2*i + 4]).encode("utf-8") + "%"
                 # We add correct result
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         port = PORT  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket()
-        s.bind((host, port))
+        s.bind(('', port))
         NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
 
