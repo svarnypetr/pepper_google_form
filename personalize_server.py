@@ -13,8 +13,8 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
 API_KEY_FILE = "key.json"
-SPREADSHEET = "Lez11 (Responses)"
-PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
+SPREADSHEET = "pepper competenza 2 (Responses)"
+PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_ws(sheet_name):
@@ -56,7 +56,6 @@ def generate_output_sequence(students, general, id):
         :return: {string}
         """
         output_string = ''
-        # import ipdb; ipdb.set_trace()
         id_row = students.loc[students['matricola'] == id]
 
         # We get the student name
@@ -67,7 +66,7 @@ def generate_output_sequence(students, general, id):
                 if general.iloc[1, i]:
                         output_string += remove_non_ascii(general.iloc[1, i]).encode("utf-8") + "%"
                 # We add his answer
-                output_string += remove_non_ascii(id_row.iloc[0, 2*i + 4]).encode("utf-8") + "%"
+                output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + "%"
                 # We add correct result
                 output_string += remove_non_ascii(general.iloc[2, i]).encode("utf-8") + "%"
         return output_string
