@@ -115,12 +115,12 @@ if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
         port = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
-        s = socket.socket()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(('', port))
         NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
         while run_count < NUMBER_OF_FORMS:
-                s.listen(1)
+                s.listen(5)
                 c, addr = s.accept()
                 print("Connection from: " + str(addr))
                 while True:
