@@ -13,8 +13,8 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
 API_KEY_FILE = "key.json"
-SPREADSHEET = "pepper competenza 2 (Responses)"
-PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
+SPREADSHEET = "Lez04 (Responses)"
+PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_ws(sheet_name):

@@ -20,7 +20,7 @@ API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
-SPREADSHEET = "pepper competenza 2 (Responses)"
+SPREADSHEET = "Lez04 (Responses)"
 
 
 def get_forms_data():
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(('', port))
-        NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
+        NUMBER_OF_FORMS = 6  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
         while run_count < NUMBER_OF_FORMS:
                 s.listen(5)
