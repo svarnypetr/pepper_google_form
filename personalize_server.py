@@ -40,14 +40,17 @@ def get_ws(sheet_name):
 
         worksheet = workbook.worksheet('Calculations').get_all_values()
         general_df = pd.DataFrame(worksheet)
-        return student_df, general_df
+#!!!Added here worksheet with Prof feedback
+        worksheet = workbook.worksheet('Feedback').get_all_values()
+        prof_df = pd.DataFrame(worksheet)
+        return student_df, general_df, prof_df
 
 
 def remove_non_ascii(text):
     return unidecode(text)
 
-
-def generate_output_sequence(students, general, id):
+#!!! added prof here
+def generate_output_sequence(students, general, prof, id):
         """
         Generates messages for the output based on the processed data.
         :param students: {dataframe}
@@ -57,6 +60,8 @@ def generate_output_sequence(students, general, id):
         """
         output_string = ''
         id_row = students.loc[students['matricola'] == id]
+#!!! Added here id for feedback sheet
+        id_row2 = prof.loc[prof['matricola'] == id]
 
         # We get the student name
         output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%"
@@ -69,6 +74,8 @@ def generate_output_sequence(students, general, id):
                 output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + "%"
                 # We add correct result
                 output_string += remove_non_ascii(general.iloc[2, i]).encode("utf-8") + "%"
+ #!!! Added output for prof here
+                output_string += remove_non_ascii(id_row2.iloc[0, i + 4]).encode("utf-8") + "%"      
         return output_string
 
 
@@ -78,7 +85,7 @@ if __name__ == '__main__':
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(('', port))
-        NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
+        NUMBER_OF_FORMS = 100  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
 
         matricola_pattern = r"^[0-9]{5}"
