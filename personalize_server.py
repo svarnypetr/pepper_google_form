@@ -40,17 +40,13 @@ def get_ws(sheet_name):
 
         worksheet = workbook.worksheet('Calculations').get_all_values()
         general_df = pd.DataFrame(worksheet)
-#!!!Added here worksheet with Prof feedback
-        worksheet = workbook.worksheet('Feedback').get_all_values()
-        prof_df = pd.DataFrame(worksheet)
-        return student_df, general_df, prof_df
+        return student_df, general_df
 
 
 def remove_non_ascii(text):
     return unidecode(text)
 
-#!!! added prof here
-def generate_output_sequence(students, general, prof, id):
+def generate_output_sequence(students, general, id):
         """
         Generates messages for the output based on the processed data.
         :param students: {dataframe}
@@ -60,8 +56,6 @@ def generate_output_sequence(students, general, prof, id):
         """
         output_string = ''
         id_row = students.loc[students['matricola'] == id]
-#!!! Added here id for feedback sheet
-        id_row2 = prof.loc[prof['matricola'] == id]
 
         # We get the student name
         output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%"
@@ -74,8 +68,7 @@ def generate_output_sequence(students, general, prof, id):
                 output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + "%"
                 # We add correct result
                 output_string += remove_non_ascii(general.iloc[2, i]).encode("utf-8") + "%"
- #!!! Added output for prof here
-                output_string += remove_non_ascii(id_row2.iloc[0, i + 4]).encode("utf-8") + "%"      
+      
         return output_string
 
 
@@ -97,11 +90,11 @@ if __name__ == '__main__':
                 client_data = c.recv(2048).decode('utf-8')
 
                 is_matched = re.findall(matricola_pattern, client_data)
-#!!! Added prof_df here
+
                 if is_matched:
-                        students_df, general_df, prof_df = get_ws(SPREADSHEET)
-#!!! Added prof_df here
-                        output = generate_output_sequence(students_df, general_df, prof_df, client_data)
+                        students_df, general_df = get_ws(SPREADSHEET)
+
+                        output = generate_output_sequence(students_df, general_df, client_data)
 
                         c.send(output.encode('utf-8'))
                         client_data = ''
