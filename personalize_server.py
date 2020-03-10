@@ -97,11 +97,11 @@ if __name__ == '__main__':
                 client_data = c.recv(2048).decode('utf-8')
 
                 is_matched = re.findall(matricola_pattern, client_data)
-
+#!!! Added prof_df here
                 if is_matched:
-                        students_df, general_df = get_ws(SPREADSHEET)
-
-                        output = generate_output_sequence(students_df, general_df, client_data)
+                        students_df, general_df, prof_df = get_ws(SPREADSHEET)
+#!!! Added prof_df here
+                        output = generate_output_sequence(students_df, general_df, prof_df, client_data)
 
                         c.send(output.encode('utf-8'))
                         client_data = ''
