@@ -15,6 +15,7 @@ class Pepper(object):
         self.position = -1
         self._input_list = []
         self.answer = ""
+        self.output_answer = ""
 
     def onInput_onString(self, _input_str):
         """
@@ -24,37 +25,36 @@ class Pepper(object):
         """
         processed_list = _input_str.split('%')[:-1]
         self._input_list = processed_list
-        self.position = 0
+        self.position = -1
         self.code()
         pass
 
+    def onStopped():
+        pass
+
     def code(self):
-        hello_statement = ''
-        if self.position == 0:
+        if self.position == -1:
             # I add the last value from the list but divide it by 100, it were %
             # I am using the format notation that is a little better and more versatile, read, google and learn
-            hello_statement += "Hello {}.".format(self._input_list[self.position])
-            self.position = 1
+            self.output_answer = "Ho ricevuto, {} risposte.".format(int(self._input_list[self.position])/100)
+            self.position = 0
 
-        while self.position < len(self._input_list):
-            single_response = ''
-            # we now iterate through the list with different behaviour for different parts of the list
-            question_content = self._input_list[self.position]
+        while self.position < len(self._input_list)-2:
+            # we now iterate through the list only until the before last member
+            self.answer = "era {}.".format(self._input_list[self.position])
             self.position += 1
-            single_response += "Your answer was {}.".format(self._input_list[self.position])
+            self.answer = self.answer + "La risposta corretta e stata {} .".format(self._input_list[self.position])
             self.position += 1
-            if self._input_list[self.position] == self._input_list[self.position - 1]:
-                single_response += "That answer was correct."
-            else:
-                single_response += "That answer was not correct. The correct answer was: {}".format(
-                    self._input_list[self.position])
+            self.answer = self.answer + "e stata data la risposta esatta dal {} percent di voi.".format(self._input_list[self.position])
             self.position += 1
-            question_number = (self.position - 1) / 3
-            single_response = "The question {} was {}.".format(question_number, question_content) + single_response
-            self.answer += single_response
+            self.output_answer += "La domanda " + str(self.position/3) + " " + self.answer
 
-        self.answer = hello_statement + self.answer
-        print(self.answer)
+        if self.position == len(self._input_list)-2:
+            self.answer = "In tutto le vostre risposte esatte sono state il {} percento.".format(self._input_list[self.position])
+            self.onStopped()
+            self.output_answer += "In tutto le vostre risposte esatte sono state il " + self.answer
+
+        print(self.output_answer)
 
 
 def client(stop=False):
@@ -71,14 +71,11 @@ def client(stop=False):
             s.send('stop'.encode('utf-8'))
             break
 
-        s.send('12345'.encode('utf-8'))
+        s.send('give me data'.encode('utf-8'))
         received_message = s.recv(2048).decode('utf-8')
-        # print('Received from server: ' + received_message)
-        if received_message == 'matricola_error':
-            print(received_message)
-        else:
-            pepper.onInput_onString(received_message)
-            pepper.code()
+        print(received_message)
+        pepper.onInput_onString(received_message)
+        pepper.code()
         s.close()
         if stop:
             s.send('stop'.encode('utf-8'))

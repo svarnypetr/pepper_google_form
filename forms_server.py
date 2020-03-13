@@ -21,6 +21,7 @@ API_KEY_FILE = "key.json"
 
 # The requested spreadsheet
 SPREADSHEET = "Lez04 (Responses)"
+PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_forms_data():
@@ -75,7 +76,6 @@ def get_ws(sheet_name):
         for sheet in gc.openall():
                 print("{} - {}".format(sheet.title, sheet.id))
 
-
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)
 
@@ -113,7 +113,7 @@ def generate_output_sequence(ws):
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 6554  # Make sure it's within the > 1024 $$ <65535 range
+        port = PORT  # Make sure it's within the > 1024 $$ <65535 range
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(('', port))
