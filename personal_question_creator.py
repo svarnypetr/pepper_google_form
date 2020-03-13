@@ -1,31 +1,20 @@
-"""
-Dummy client serves for testing
-"""
-
-import socket
-
-PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
-
-
-class Pepper(object):
-    """
-    Pepper replacement class
-    """
+class MyClass(GeneratedClass):
     def __init__(self):
+        GeneratedClass.__init__(self)
         self.position = -1
         self._input_list = []
         self.answer = ""
 
-    def onInput_onString(self, _input_str):
-        """
-        We need to split the input string based on the percent separator
-        '2%2%'.split('%') this split leads to the list ['2', '2', ''],
-        therefore we remove the last member right-away by saying "all except the last one" -> [:-1]
-        """
-        processed_list = _input_str.split('%')[:-1]
-        self._input_list = processed_list
-        self.position = 0
-        self.code()
+    def onLoad(self):
+        #  put initialization code here
+        self.position = -1
+        self._input_list = []
+        pass
+
+    def onUnload(self):
+        #  put clean-up code here
+        self.position = "terminated"
+        self._input_list = []
         pass
 
     def code(self):
@@ -54,36 +43,24 @@ class Pepper(object):
             self.answer += single_response
 
         self.answer = hello_statement + self.answer
-        print(self.answer)
+        self.output_answer(self.answer)
 
+    def onInput_onString(self, _input_str):
+        """
+        We need to split the input string based on the percent separator
+        '2%2%'.split('%') this split leads to the list ['2', '2', ''],
+        therefore we remove the last member right-away by saying "all except the last one" -> [:-1]
+        """
+        processed_list = _input_str.split('%')[:-1]
+        self._input_list = processed_list
+        self.position = 0
+        self.code()
+        pass
 
-def client(stop=False):
-    host = socket.gethostname()
-    port = PORT
+    def onInput_input(self):
+        if not self.position == "terminated":
+            self.code()
+        pass
 
-    s = socket.socket()
-    s.connect((host, port))
-    pepper = Pepper()
-
-    received_message = False
-    while not received_message:
-        if stop:
-            s.send('stop'.encode('utf-8'))
-            break
-
-        s.send('12345'.encode('utf-8'))
-        received_message = s.recv(2048).decode('utf-8')
-        # print('Received from server: ' + received_message)
-        if received_message == 'matricola_error':
-            print(received_message)
-        else:
-            pepper.onInput_onString(received_message)
-            pepper.code()
-        s.close()
-        if stop:
-            s.send('stop'.encode('utf-8'))
-
-
-if __name__ == '__main__':
-    # client(True)
-    client()
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped

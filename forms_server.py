@@ -6,6 +6,8 @@ import json
 import socket
 import subprocess
 import os
+from unidecode import unidecode
+
 
 SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
@@ -18,7 +20,7 @@ API_KEY_FILE = "key.json"
 
 
 # The requested spreadsheet
-SPREADSHEET = "Lez29_10_19 (Responses)"
+SPREADSHEET = "Lez04 (Responses)"
 
 
 def get_forms_data():
@@ -49,12 +51,6 @@ def get_forms_data():
         # The data comes in through a dictionary so we can not assume order stays the
         # same so must name each column
         # Currently columns are renamed without knowing their names in order to work with any form
-        column_names_original = list(data)  # TODO: test, maybe superfluous
-        column_names = {}  # TODO: test, maybe superfluous
-        for name in column_names_original:  # TODO: test, maybe superfluous
-            column_names[name] = name.lower().replace(' ', '')    # TODO: test, maybe superfluous
-
-        data.rename(columns=column_names, inplace=True)  # TODO: test, maybe superfluous
         # data.timestamp = pd.to_datetime(data.timestamp)
 
         # NOTE: This code will allow us to access/work with data from the last 2 minutes
@@ -89,6 +85,10 @@ def get_ws(sheet_name):
         return worksheet
 
 
+def remove_non_ascii(text):
+    return unidecode(text)
+
+
 def generate_output_sequence(ws):
         """
         Generates messages for the output based on the processed data.
@@ -99,13 +99,12 @@ def generate_output_sequence(ws):
 
         first_row_length = len(ws[0])
         for i in range(first_row_length - 2):
-                # import ipdb;                ipdb.set_trace()
                 # We read the question and add the question, if any. We keep % as separator.
                 if ws[1][i]:
-                        output_string += ws[1][i] + "%"
+                        output_string += remove_non_ascii(ws[1][i]).encode("utf-8") + "%"
                 # We read the answer and add it, if any. We keep % as separator.
                 if ws[2][i]:
-                        output_string += ws[2][i] + "%"
+                        output_string += remove_non_ascii(ws[2][i]).encode("utf-8") + "%"
                 # each cell we turn the numbers into percent without decimal value, % will be then our separator
                 output_string += "{:.0%}".format(float(ws[0][i]))
         output_string += "{:.0%}".format(float(ws[0][-2])) + "{:.0%}".format(float(ws[0][-1]))
@@ -114,14 +113,14 @@ def generate_output_sequence(ws):
 
 if __name__ == '__main__':
         host = socket.gethostname()  # get local machine name
-        port = 6555  # Make sure it's within the > 1024 $$ <65535 range
+        port = 6554  # Make sure it's within the > 1024 $$ <65535 range
 
-        s = socket.socket()
-        s.bind((host, port))
-        NUMBER_OF_FORMS = 5  # TODO: This is the number of connections the server accepts before shutting down
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(('', port))
+        NUMBER_OF_FORMS = 6  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
         while run_count < NUMBER_OF_FORMS:
-                s.listen(1)
+                s.listen(5)
                 c, addr = s.accept()
                 print("Connection from: " + str(addr))
                 while True:
@@ -137,3 +136,5 @@ if __name__ == '__main__':
 
                 c.close()
                 run_count += 1
+                if data == 'stop':
+                        break
