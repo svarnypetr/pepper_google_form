@@ -56,12 +56,14 @@ def generate_output_sequence(prof, id):
         id_row = prof.loc[prof['matricola'] == id]
 
         # We get the student name
-        output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%"
-
-        for i in range(len(prof.columns)):
-                # We add the vote and the judgement
-                if prof.iloc[1, i]:
-                        output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + "%"      
+        output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%" + str(id_row.iloc[0]['vote']) + "%" + str(id_row.iloc[0]['judgement']) + "%"
+        
+        #import ipdb; ipdb.set_trace()
+        
+        # for i in range(len(prof.columns)):
+        #         # We add the vote and the judgement
+        #         if prof.iloc[1, i]:
+        #                 output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + "%"      
         return output_string
 
 
