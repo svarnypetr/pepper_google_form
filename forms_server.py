@@ -1,4 +1,3 @@
-from __future__ import print_function
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
@@ -21,7 +20,7 @@ API_KEY_FILE = "key.json"
 
 # The requested spreadsheet
 SPREADSHEET = "Lez04 (Responses)"
-PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_forms_data():
@@ -95,19 +94,20 @@ def generate_output_sequence(ws):
         :param ws: {worksheet}
         :return: {string}
         """
-        output_string = ''
+        output_string = b''
 
         first_row_length = len(ws[0])
         for i in range(first_row_length - 2):
                 # We read the question and add the question, if any. We keep % as separator.
+                # import ipdb; ipdb.set_trace()
                 if ws[1][i]:
-                        output_string += remove_non_ascii(ws[1][i]).encode("utf-8") + "%"
-                # We read the answer and add it, if any. We keep % as separator.
+                        output_string += remove_non_ascii(ws[1][i]).encode("utf-8") + b"%"
+                # We read the answer and add it, if any. We keep % as separator
                 if ws[2][i]:
-                        output_string += remove_non_ascii(ws[2][i]).encode("utf-8") + "%"
+                        output_string += remove_non_ascii(ws[2][i]).encode("utf-8") + b"%"
                 # each cell we turn the numbers into percent without decimal value, % will be then our separator
-                output_string += "{:.0%}".format(float(ws[0][i]))
-        output_string += "{:.0%}".format(float(ws[0][-2])) + "{:.0%}".format(float(ws[0][-1]))
+                output_string += "{:.0%}".format(float(ws[0][i])).encode("utf-8")
+        output_string += "{:.0%}".format(float(ws[0][-2])).encode("utf-8") + "{:.0%}".format(float(ws[0][-1])).encode("utf-8")
         return output_string
 
 
@@ -132,7 +132,7 @@ if __name__ == '__main__':
 
                         output = generate_output_sequence(ws)
 
-                        c.send(output.encode('utf-8'))
+                        c.send(output)
 
                 c.close()
                 run_count += 1
