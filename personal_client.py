@@ -4,7 +4,7 @@ Dummy client serves for testing
 
 import socket
 
-PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
 
 
 class Pepper(object):
