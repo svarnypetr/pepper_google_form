@@ -71,9 +71,29 @@ def get_ws(sheet_name):
         credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
         gc = gspread.authorize(credentials)
 
+        sheet_list = []
         print("The following sheets are available")
-        for sheet in gc.openall():
-                print("{} - {}".format(sheet.title, sheet.id))
+        for i, sheet in enumerate(gc.openall()):
+                sheet_list.append([sheet.title])
+                # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
+                print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
+
+        chosen_sheet = False
+        if sheet_list:
+                while not chosen_sheet:
+                        chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
+                        if chosen_sheet in range(1, len(sheet_list)):
+                                sheet_name = sheet_list[chosen_sheet - 1][0]
+                        else:
+                                print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
+                                chosen_sheet = False
+        else:
+                print("No sheets available.")
+                return
+
+        # print("The following sheets are available")
+        # for sheet in gc.openall():
+        #         print("{} - {}".format(sheet.title, sheet.id))
 
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)

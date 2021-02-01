@@ -43,7 +43,7 @@ def get_ws():
                 print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
                 chosen_sheet = False
     else:
-        print("No sheets.")
+        print("No sheets available.")
         return
     # Open up the workbook based on the spreadsheet name
     # sheet_name = "Lez04 (Responses)"  #WIP
@@ -70,11 +70,11 @@ def generate_output_sequence(students, general, id):
     :param id: {str} identifying the student
     :return: {string}
     """
-    output_string = ''
+    output_string = b''
     id_row = students.loc[students['matricola'] == id]
 
     # We get the student name
-    output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + b"%"
+    output_string += remove_non_ascii(id_row.iloc[0]['nome']).encode("utf-8") + b' ' + remove_non_ascii(id_row.iloc[0]['cognome']).encode("utf-8") + b"%"
 
     for i in range(len(general.columns) - 2):
         # We add the question
