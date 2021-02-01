@@ -124,4 +124,5 @@ if __name__ == '__main__':
             c.close()
 
         if client_data == 'stop':
+            c.close()
             break

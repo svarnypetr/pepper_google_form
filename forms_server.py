@@ -157,4 +157,5 @@ if __name__ == '__main__':
                 c.close()
                 run_count += 1
                 if data == 'stop':
+                        c.close()
                         break
