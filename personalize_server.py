@@ -36,7 +36,7 @@ def get_ws():
     chosen_sheet = False
     if sheet_list:
         while not chosen_sheet:
-            chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list) + 1}) "))
+            chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
             if chosen_sheet in range(1, len(sheet_list)):
                 sheet_name = sheet_list[chosen_sheet - 1][0]
             else:
@@ -74,16 +74,16 @@ def generate_output_sequence(students, general, id):
     id_row = students.loc[students['matricola'] == id]
 
     # We get the student name
-    output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + "%"
+    output_string += str(id_row.iloc[0]['nome']) + ' ' + str(id_row.iloc[0]['cognome']) + b"%"
 
     for i in range(len(general.columns) - 2):
         # We add the question
         if general.iloc[1, i]:
-            output_string += remove_non_ascii(general.iloc[1, i]).encode("utf-8") + "%"
+            output_string += remove_non_ascii(general.iloc[1, i]).encode("utf-8") + b"%"
         # We add his answer
-        output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + "%"
+        output_string += remove_non_ascii(id_row.iloc[0, i + 4]).encode("utf-8") + b"%"
         # We add correct result
-        output_string += remove_non_ascii(general.iloc[2, i]).encode("utf-8") + "%"
+        output_string += remove_non_ascii(general.iloc[2, i]).encode("utf-8") + b"%"
       
     return output_string
 
@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
             output = generate_output_sequence(students_df, general_df, client_data)
 
-            c.send(output.encode('utf-8'))
+            c.send(output)
             client_data = ''
             c.close()
         run_count += 1
