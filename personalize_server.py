@@ -47,7 +47,6 @@ def get_ws():
         return
     # Open up the workbook based on the spreadsheet name
     # sheet_name = "Lez04 (Responses)"  #WIP
-    import ipdb; ipdb.set_trace()
     workbook = gc.open(sheet_name)
 
     # Get selected worksheet
