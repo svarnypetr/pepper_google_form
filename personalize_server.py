@@ -37,7 +37,7 @@ def get_ws():
     if sheet_list:
         while not chosen_sheet:
             chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list) + 1}) "))
-            if chosen_sheet in range(1, len(sheet_list) + 1):
+            if chosen_sheet in range(1, len(sheet_list)):
                 sheet_name = sheet_list[chosen_sheet - 1][0]
             else:
                 print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
