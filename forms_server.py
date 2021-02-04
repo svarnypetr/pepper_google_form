@@ -139,7 +139,9 @@ if __name__ == '__main__':
         s.bind(('', port))
         NUMBER_OF_FORMS = 6  # TODO: This is the number of connections the server accepts before shutting down
         run_count = 0
+        ws = get_ws(SPREADSHEET)
         while run_count < NUMBER_OF_FORMS:
+
                 s.listen(5)
                 c, addr = s.accept()
                 print("Connection from: " + str(addr))
@@ -147,12 +149,10 @@ if __name__ == '__main__':
                         data = c.recv(1024).decode('utf-8')
                         if data == 'stop':
                                 break
-
-                        ws = get_ws(SPREADSHEET)
-
                         output = generate_output_sequence(ws)
-
                         c.send(output)
+                        if output:
+                                break
 
                 c.close()
                 run_count += 1

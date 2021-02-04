@@ -99,6 +99,8 @@ if __name__ == '__main__':
 
     matricola_pattern = r"^[0-9]{5}"
 
+    students_df, general_df = get_ws()
+
     while run_count < NUMBER_OF_FORMS:
         s.listen(5)
         c, addr = s.accept()
@@ -108,8 +110,6 @@ if __name__ == '__main__':
         is_matched = re.findall(matricola_pattern, client_data)
 
         if is_matched:
-            students_df, general_df = get_ws()
-
             output = generate_output_sequence(students_df, general_df, client_data)
 
             c.send(output)

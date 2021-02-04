@@ -26,7 +26,7 @@ class Pepper(object):
         self._input_list = processed_list
         self.position = 0
         self.code()
-        pass
+        return
 
     def code(self):
         hello_statement = ''
@@ -71,6 +71,7 @@ def client(stop=False):
     while not received_message:
         if stop:
             s.send('stop'.encode('utf-8'))
+            s.close()
             break
 
         s.send('12345'.encode('utf-8'))
@@ -80,12 +81,9 @@ def client(stop=False):
             print(received_message)
         else:
             pepper.onInput_onString(received_message)
-            pepper.code()
         s.close()
-        if stop:
-            s.send('stop'.encode('utf-8'))
 
 
 if __name__ == '__main__':
-    # client(True)
+    #client(True)
     client()
