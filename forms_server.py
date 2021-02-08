@@ -1,10 +1,12 @@
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
 import json
+import os
+import pandas as pd
 import socket
 import subprocess
-import os
+
+
+from oauth2client.service_account import ServiceAccountCredentials
 from unidecode import unidecode
 
 
@@ -12,9 +14,6 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
 # This needs to be your API key file
-# NOTE: Currently I have a different key file, so I keep it commented
-# API_KEY_FILE = "Macerata-b7cd0349db2e.json"
-# API_KEY_FILE = "macerata-1549040199941-9b1795f038ec.json"
 API_KEY_FILE = "key.json"
 
 

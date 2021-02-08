@@ -1,12 +1,13 @@
-from __future__ import print_function
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
 import json
+import os
+import pandas as pd
+import re
 import socket
 import subprocess
-import os
-import re
+
+
+from oauth2client.service_account import ServiceAccountCredentials
 from unidecode import unidecode
 
 SCOPE = ['https://spreadsheets.google.com/feeds',
