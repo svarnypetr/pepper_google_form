@@ -62,16 +62,39 @@ def client(stop=False):
     host = socket.gethostname()
     port = PORT
 
-    s = socket.socket()
-    s.connect((host, port))
-    pepper = Pepper()
+    if '-h' in sys.argv:
+        handshake_mode = True
+    else:
+        handshake_mode = False
 
     received_message = False
+    while handshake_mode:
+        try:
+            s = socket.socket()
+
+            s.connect((host, port))
+            s.send('client'.encode('utf-8'))
+            received_message = s.recv(2048).decode('utf-8')
+            handshake_mode = False
+            s.close()
+        finally:
+            if received_message == 'forms_server':
+                print("Successful handshake with Personal server.")
+                received_message = False
+            else:
+                raise Exception(f"Expected to connect to personal_server but got {received_message}.")
+
+    pepper = Pepper()
+
     while not received_message:
+        s = socket.socket()
+        s.connect((host, port))
+
         if stop:
             s.send('stop'.encode('utf-8'))
             s.close()
             break
+
         s.send('give me data'.encode('utf-8'))
         received_message = s.recv(2048).decode('utf-8')
         print(received_message)

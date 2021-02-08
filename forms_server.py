@@ -15,11 +15,12 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
 
 # This needs to be your API key file
 API_KEY_FILE = "key.json"
-
+NUMBER_OF_FORMS = 6  # The number of connections the server accepts before shutting down
 
 # The requested spreadsheet
 SPREADSHEET = "Lez04 (Responses)"
 PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
+
 
 
 def get_forms_data():
@@ -140,12 +141,32 @@ if __name__ == '__main__':
         port = PORT  # Make sure it's within the > 1024 $$ <65535 range
         test_run = False
 
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(('', port))
+
         if "-t" in str(sys.argv):
                 test_run = True
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('', port))
-        NUMBER_OF_FORMS = 6  # The number of connections the server accepts before shutting down
+        if '-h' in sys.argv:
+            handshake = False
+        else:
+            handshake = True
+
+        while not handshake:
+            s.listen(5)
+            try:
+                c, addr = s.accept()
+                print("Connection from: " + str(addr))
+                received_message = c.recv(2048).decode('utf-8')
+                c.send('forms_server'.encode('utf-8'))
+                handshake = True
+                c.close()
+            finally:
+                if received_message == 'client':
+                    print("Successful handshake with Personal client.")
+                else:
+                    raise Exception(f"Expected to connect to personal_client but got {received_message}.")
+
         run_count = 0
         ws = get_ws(SPREADSHEET, test_run)
         while run_count < NUMBER_OF_FORMS:

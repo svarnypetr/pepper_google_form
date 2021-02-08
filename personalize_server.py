@@ -107,6 +107,26 @@ if __name__ == '__main__':
 
     matricola_pattern = r"^[0-9]{5}"
 
+    if '-h' in sys.argv:
+        handshake = False
+    else:
+        handshake = True
+
+    while not handshake:
+        s.listen(5)
+        try:
+            c, addr = s.accept()
+            print("Connection from: " + str(addr))
+            received_message = c.recv(2048).decode('utf-8')
+            c.send('personal_server'.encode('utf-8'))
+            handshake = True
+            c.close()
+        finally:
+            if received_message == 'personal_client':
+                print("Successful handshake with Personal client.")
+            else:
+                raise Exception(f"Expected to connect to personal_client but got {received_message}.")
+
     students_df, general_df = get_ws(test_run)
 
     while run_count < NUMBER_OF_FORMS:
@@ -127,7 +147,7 @@ if __name__ == '__main__':
 
         if not is_matched and client_data != 'stop':
             output = "matricola_error"
-            print(output, "attempted to send: {}".format(client_data))
+            print(f"{output}, {str(addr)} attempted to send: {client_data}")
             c.send(output.encode('utf-8'))
             c.close()
 
