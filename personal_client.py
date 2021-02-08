@@ -3,6 +3,7 @@ Dummy client serves for testing
 """
 
 import socket
+import sys
 
 PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
 
@@ -26,7 +27,7 @@ class Pepper(object):
         self._input_list = processed_list
         self.position = 0
         self.code()
-        pass
+        return
 
     def code(self):
         hello_statement = ''
@@ -34,26 +35,28 @@ class Pepper(object):
             # I add the last value from the list but divide it by 100, it were %
             # I am using the format notation that is a little better and more versatile, read, google and learn
             hello_statement += "Hello {}.".format(self._input_list[self.position])
-            self.position = 1
+        #self.position = 1
 
-        while self.position < len(self._input_list):
-            single_response = ''
-            # we now iterate through the list with different behaviour for different parts of the list
-            question_content = self._input_list[self.position]
-            self.position += 1
-            single_response += "Your answer was {}.".format(self._input_list[self.position])
-            self.position += 1
-            if self._input_list[self.position] == self._input_list[self.position - 1]:
-                single_response += "That answer was correct."
-            else:
-                single_response += "That answer was not correct. The correct answer was: {}".format(
-                    self._input_list[self.position])
-            self.position += 1
-            question_number = (self.position - 1) / 3
-            single_response = "The question {} was {}.".format(question_number, question_content) + single_response
-            self.answer += single_response
+        # while self.position < len(self._input_list):
+        #     single_response = ''
+        #     # we now iterate through the list with different behaviour for different parts of the list
+        #     question_content = self._input_list[self.position]
+        #     self.position += 1
+        #     single_response += "Your vote is {}.".format(self._input_list[self.position])
+        #     self.position += 1
+        #     if self._input_list[self.position] == self._input_list[self.position - 1]:
+        #         single_response += "That answer was correct."
+        #     else:
+        #         single_response += "That answer was not correct. The correct answer was: {}".format(
+        #             self._input_list[self.position])
+        #     self.position += 1
+        #     question_number = (self.position - 1) / 3
+        #     single_response = "The question {} was {}.".format(question_number, question_content) + single_response
+        #     self.answer += single_response
 
-        self.answer = hello_statement + self.answer
+        #self.answer = hello_statement + self.answer
+
+        self.answer = hello_statement + "Your vote is: " + self._input_list[1] + "because: " + self._input_list[2]
         print(self.answer)
 
 
@@ -69,6 +72,7 @@ def client(stop=False):
     while not received_message:
         if stop:
             s.send('stop'.encode('utf-8'))
+            s.close()
             break
 
         s.send('12345'.encode('utf-8'))
@@ -78,12 +82,11 @@ def client(stop=False):
             print(received_message)
         else:
             pepper.onInput_onString(received_message)
-            pepper.code()
         s.close()
-        if stop:
-            s.send('stop'.encode('utf-8'))
 
 
 if __name__ == '__main__':
-    # client(True)
-    client()
+    if "-s" in str(sys.argv):
+        client(True)
+    else:
+        client()

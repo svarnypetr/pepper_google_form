@@ -3,8 +3,9 @@ Dummy client serves for testing
 """
 
 import socket
+import sys
 
-PORT = 6557  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
 
 
 class Pepper(object):
@@ -29,7 +30,7 @@ class Pepper(object):
         self.code()
         pass
 
-    def onStopped():
+    def onStopped(self):
         pass
 
     def code(self):
@@ -69,18 +70,17 @@ def client(stop=False):
     while not received_message:
         if stop:
             s.send('stop'.encode('utf-8'))
+            s.close()
             break
-
         s.send('give me data'.encode('utf-8'))
         received_message = s.recv(2048).decode('utf-8')
         print(received_message)
         pepper.onInput_onString(received_message)
-        pepper.code()
         s.close()
-        if stop:
-            s.send('stop'.encode('utf-8'))
 
 
 if __name__ == '__main__':
-    # client(True)
-    client()
+    if "-s" in str(sys.argv):
+        client(True)
+    else:
+        client()
