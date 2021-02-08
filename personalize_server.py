@@ -5,7 +5,7 @@ import pandas as pd
 import re
 import socket
 import subprocess
-
+import sys
 
 from oauth2client.service_account import ServiceAccountCredentials
 from unidecode import unidecode
@@ -18,23 +18,26 @@ SPREADSHEET = "Lez04 (Responses)"
 PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
 
 
-def get_ws():
+def get_ws(test_run):
     # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
-    # Load in the secret JSON key (must be a service account)
-    # json_key = json.load(open(API_KEY_FILE))
 
     # Authenticate using the signed key
     credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
     gc = gspread.authorize(credentials)
 
     sheet_list = []
-    print("The following sheets are available")
-    for i, sheet in enumerate(gc.openall()):
-        sheet_list.append([sheet.title])
-        # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
-        print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
 
     chosen_sheet = False
+    if test_run:
+        chosen_sheet = True
+        sheet_name = SPREADSHEET
+    else:
+        print("The following sheets are available")
+        for i, sheet in enumerate(gc.openall()):
+            sheet_list.append([sheet.title])
+            # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
+            print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
+
     if sheet_list:
         while not chosen_sheet:
             chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
@@ -43,7 +46,7 @@ def get_ws():
             else:
                 print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
                 chosen_sheet = False
-    else:
+    if not sheet_list and not test_run:
         print("No sheets available.")
         return
     # Open up the workbook based on the spreadsheet name
@@ -92,15 +95,19 @@ def generate_output_sequence(students, general, id):
 if __name__ == '__main__':
     host = socket.gethostname()  # get local machine name
     port = PORT  # Make sure it's within the > 1024 $$ <65535 range
+    test_run = False
+
+    if "-t" in str(sys.argv):
+        test_run = True
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('', port))
-    NUMBER_OF_FORMS = 100  # TODO: This is the number of connections the server accepts before shutting down
+    NUMBER_OF_FORMS = 100  # The number of connections the server accepts before shutting down
     run_count = 0
 
     matricola_pattern = r"^[0-9]{5}"
 
-    students_df, general_df = get_ws()
+    students_df, general_df = get_ws(test_run)
 
     while run_count < NUMBER_OF_FORMS:
         s.listen(5)
@@ -118,7 +125,7 @@ if __name__ == '__main__':
             c.close()
         run_count += 1
 
-        if not is_matched:
+        if not is_matched and client_data != 'stop':
             output = "matricola_error"
             print(output, "attempted to send: {}".format(client_data))
             c.send(output.encode('utf-8'))

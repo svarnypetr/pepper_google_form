@@ -3,6 +3,7 @@ Dummy client serves for testing
 """
 
 import socket
+import sys
 
 PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
 
@@ -79,5 +80,7 @@ def client(stop=False):
 
 
 if __name__ == '__main__':
-    # client(True)
-    client()
+    if "-s" in str(sys.argv):
+        client(True)
+    else:
+        client()
