@@ -60,9 +60,11 @@ class Pepper(object):
 
 def client(stop=False):
     host = socket.gethostname()
-    with open("config.json", "r") as jsonfile:
-        config = json.load(jsonfile)
-    port = config['port']
+    port = PORT
+    if '-t' in sys.argv:
+        with open("config.json", "r") as jsonfile:
+            config = json.load(jsonfile)
+        port = config['port']
 
     if '-h' in sys.argv:
         handshake_mode = True
