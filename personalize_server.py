@@ -15,7 +15,7 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
 
 API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez04 (Responses)"
-PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_ws(test_run):
