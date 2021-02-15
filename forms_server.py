@@ -19,8 +19,7 @@ NUMBER_OF_FORMS = 6  # The number of connections the server accepts before shutt
 
 # The requested spreadsheet
 SPREADSHEET = "Lez04 (Responses)"
-PORT = 6553  # Make sure it's within the > 1024 $$ <65535 range
-
+PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
 
 def get_forms_data():
@@ -64,8 +63,6 @@ def get_forms_data():
 
 def get_ws(sheet_name, test_run):
         # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
-        # Load in the secret JSON key (must be a service account)
-        # json_key = json.load(open(API_KEY_FILE))
 
         # Authenticate using the signed key
         credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
@@ -124,7 +121,6 @@ def generate_output_sequence(ws):
         first_row_length = len(ws[0])
         for i in range(first_row_length - 2):
                 # We read the question and add the question, if any. We keep % as separator.
-                # import ipdb; ipdb.set_trace()
                 if ws[1][i]:
                         output_string += remove_non_ascii(ws[1][i]).encode("utf-8") + b"%"
                 # We read the answer and add it, if any. We keep % as separator
@@ -141,11 +137,19 @@ if __name__ == '__main__':
         port = PORT  # Make sure it's within the > 1024 $$ <65535 range
         test_run = False
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('', port))
-
         if "-t" in str(sys.argv):
                 test_run = True
+                with open("config.json", "r") as jsonfile:
+                        config = json.load(jsonfile)
+                        port = config['port']
+                with open("config.json", "w") as jsonfile:
+                        if config['port'] > 65530:
+                                config['port'] = 1024
+                        config['port'] += 1
+                        json.dump(config, jsonfile)
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(('', port))
 
         if '-h' in sys.argv:
             handshake = False

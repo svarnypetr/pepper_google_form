@@ -99,6 +99,14 @@ if __name__ == '__main__':
 
     if "-t" in str(sys.argv):
         test_run = True
+        with open("config.json", "r") as jsonfile:
+            config = json.load(jsonfile)
+            port = config['port']
+        with open("config.json", "w") as jsonfile:
+            if config['port'] > 65530:
+                config['port'] = 1024
+            config['port'] += 1
+            json.dump(config, jsonfile)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('', port))

@@ -5,8 +5,7 @@ Dummy client serves for testing
 import socket
 import sys
 
-PORT = 6556  # Make sure it's within the > 1024 $$ <65535 range
-
+PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
 
 class Pepper(object):
     """
@@ -62,8 +61,10 @@ class Pepper(object):
 
 def client(stop=False):
     host = socket.gethostname()
-    port = PORT
 
+    with open("config.json", "r") as jsonfile:
+        config = json.load(jsonfile)
+    port = config['port']
 
     if '-h' in sys.argv:
         handshake_mode = True
