@@ -70,6 +70,13 @@ if __name__ == '__main__':
         port = PORT  # Make sure it's within the > 1024 $$ <65535 range
         test_run = False
 
+        try:
+                ip = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                ip.connect(("8.8.8.8", 80))
+                print('Server at:', ip.getsockname()[0])
+        except:
+                print("Failed to connect to the internet.")
+
         if "-t" in str(sys.argv):
                 test_run = True
 
