@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 
-# TODO: based on https://pypi.org/project/PySimpleGUI/
+# TODO: based on https://pypi.org/project/PySimpleGUI/ or https://pypi.org/project/PySimpleGUI/
 # TODO: add also a dropdown for the available matricolas
 # TODO: incorporate all the code and dropdown for the various approaches - prof etc.
 
