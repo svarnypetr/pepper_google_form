@@ -1,6 +1,10 @@
 import PySimpleGUI as sg
 
+<<<<<<< 7259359eae525fda1aea8f95a7bb5970c4c02039
 # TODO: based on https://pypi.org/project/PySimpleGUI/ or https://pypi.org/project/PySimpleGUI/
+=======
+# TODO: based on https://pypi.org/project/PySimpleGUI/
+>>>>>>> Add a very primitive GUI for outset
 # TODO: add also a dropdown for the available matricolas
 # TODO: incorporate all the code and dropdown for the various approaches - prof etc.
 
