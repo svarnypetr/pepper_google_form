@@ -1,10 +1,8 @@
-from __future__ import print_function
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import json
 import socket
-import subprocess
 import sys
 import os
 import re
@@ -56,7 +54,10 @@ def generate_output_sequence(prof, id):
         id_row = prof.loc[prof['matricola'] == id]
 
         # We get the student name
-        output_string += remove_non_ascii(id_row.iloc[0]['nome']).encode("utf-8") + b' ' + remove_non_ascii(id_row.iloc[0]['cognome']).encode("utf-8") + b"%" + remove_non_ascii(id_row.iloc[0]['vote']).encode("utf-8") + b"%" + remove_non_ascii(id_row.iloc[0]['judgement']).encode("utf-8") + b"%"
+        output_string += remove_non_ascii(id_row.iloc[0]['nome']).encode("utf-8") + b' ' +\
+                         remove_non_ascii(id_row.iloc[0]['cognome']).encode("utf-8") + b"%" +\
+                         remove_non_ascii(id_row.iloc[0]['vote']).encode("utf-8") + b"%" +\
+                         remove_non_ascii(id_row.iloc[0]['judgement']).encode("utf-8") + b"%"
 
         # for i in range(len(prof.columns)):
         #         # We add the vote and the judgement
