@@ -1,3 +1,5 @@
+# Pepper Python module content 
+
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)

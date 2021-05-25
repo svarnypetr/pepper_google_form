@@ -1,3 +1,5 @@
+# Pepper Python module content 
+
 import re
 
 class MyClass(GeneratedClass):

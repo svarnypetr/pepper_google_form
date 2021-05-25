@@ -1,3 +1,5 @@
+# Pepper Python module content 
+
 import sys; sys.path.insert(0, "/home/nao/.local/lib/python2.7/site-packages/")
 import speech_recognition as sr
 import re

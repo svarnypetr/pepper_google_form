@@ -122,7 +122,6 @@ def generate_output_sequence(ws):
         first_row_length = len(ws[0])
         for i in range(first_row_length - 2):
                 # We read the question and add the question, if any. We keep % as separator.
-                # import ipdb; ipdb.set_trace()
                 if ws[1][i]:
                         output_string += remove_non_ascii(ws[1][i]).encode("utf-8") + b"%"
                 # We read the answer and add it, if any. We keep % as separator
