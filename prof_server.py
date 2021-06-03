@@ -15,12 +15,6 @@ API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez04 (Responses)"
 PORT = 6556  # Make sure it's within the > 1024 $$ <65535 range
 
-# TODO for GUI:
-# Need to collect SPREADSHEET
-# Set the PORT
-# Give clear instructions what to do with the program
-# Make decision between the various approaches, e.g. prof, vs forms, ...
-# Add clear instructions what to run from the other tools
 
 def get_ws(sheet_name):
         # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
@@ -38,7 +32,7 @@ def get_ws(sheet_name):
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)
 
-#!!!Added here worksheet with Prof feedback
+# !!!Added here worksheet with Prof feedback
         worksheet = workbook.worksheet('Feedback').get_all_values()
         prof_df = pd.DataFrame(worksheet)
         prof_df.columns = prof_df.iloc[0]
