@@ -9,11 +9,23 @@ import PySimpleGUI as sg
 # Make decision between the various approaches, e.g. prof, vs forms, ...
 # Add clear instructions what to run from the other tools
 
+variants = {'Personal feedback': 'personal_server.py',
+            'Class feedback': 'forms_server.py',
+            'Professor feedback': 'prof_server.py',
+            }
+
+server_choices = [x for x in variants.keys()]
+
 layout = [[sg.Text("What folder should be used?")],
-          [sg.Input()],
+          [sg.Input(key='-FOLDER-', enable_events=True)],
           [sg.Text("What matricola folder should be used?")],
-          [sg.Input()],
-          [sg.Button('Ok'), sg.Button('Exit')]]
+          [sg.Input(key='-MATRICOLA-', enable_events=True)],
+          [sg.Text("What variant of the program you want to run?")],
+          [sg.InputCombo(server_choices, size=(20, 1), key='-SERVER-')],
+          #          [sg.Listbox(server_choices, size=(30, len(server_choices)), key='-SERVER-')],
+          [sg.Text(size=(25, 1), key='-CHOSEN SERVER-')],
+          [sg.Text(size=(25, 1), key='-MESSAGE-')],
+          [sg.Button('Launch'), sg.Button('Exit')]]
 
 
 window = sg.Window('Pepper edu program', layout)
@@ -23,9 +35,12 @@ while True:  # Event Loop
     print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
-    if event == 'Show':
-        # Update the "output" text element to be the value of "input" element
-        window['-OUTPUT-'].update(values['-IN-'])
+    if values['-SERVER-']:
+        window['-CHOSEN SERVER-'].update(values['-SERVER-'])
+    if event == 'Launch':
+        launch_str = f"We launch the app with {values['-FOLDER-']}."
+        window['-MESSAGE-'].update(launch_str)
+
 
 # Finish up by removing from the screen
 window.close()
