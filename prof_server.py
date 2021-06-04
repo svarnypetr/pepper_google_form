@@ -32,7 +32,7 @@ def get_ws(sheet_name):
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)
 
-#!!!Added here worksheet with Prof feedback
+# !!!Added here worksheet with Prof feedback
         worksheet = workbook.worksheet('Feedback').get_all_values()
         prof_df = pd.DataFrame(worksheet)
         prof_df.columns = prof_df.iloc[0]
