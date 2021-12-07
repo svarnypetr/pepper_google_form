@@ -5,7 +5,7 @@ Dummy client serves for testing
 import socket
 import sys
 
-PORT = 6556  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
 
 
 class Pepper(object):
@@ -77,7 +77,6 @@ def client(stop=False):
 
         s.send('12345'.encode('utf-8'))
         received_message = s.recv(2048).decode('utf-8')
-        # print('Received from server: ' + received_message)
         if received_message == 'matricola_error':
             print(received_message)
         else:

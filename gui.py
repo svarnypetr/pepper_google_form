@@ -5,6 +5,10 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from unidecode import unidecode
 
+import personal_server
+import forms_server
+import prof_server
+
 SCOPE = ['https://spreadsheets.google.com/feeds',
      'https://www.googleapis.com/auth/drive']
 
@@ -18,9 +22,9 @@ port = config['port']
 sg.theme('Default')
 sg.change_look_and_feel('DefaultNoMoreNagging')
 
-variants = {'Personal feedback': 'personal_server.py',
-            'Class feedback': 'forms_server.py',
-            'Professor feedback': 'prof_server.py',
+variants = {'Personal feedback': personal_server,
+            'Class feedback': forms_server,
+            'Professor feedback': prof_server,
             }
 
 def get_ws():
@@ -70,28 +74,9 @@ while True:  # Event Loop
     if event == 'Launch':
         launch_str = f"We launch the app with {values['-SHEET-']}."
         window['-MESSAGE-'].update(launch_str)
-
+        variants[values['-SERVER-']].main(values['-SHEET-'][0], int(values['-PORT-']))
 
 # Finish up by removing from the screen
 window.close()
 
-# Popup for errors
-# text_input = values[0]
-# sg.popup('You entered', text_input)
-
-# List of options -> fixed list of options for prof/etc. but collected from Google for the matricolas
-# choices = ('Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Purple', 'Chartreuse')
-# [sg.Listbox(choices, size=(15, len(choices)), key='-COLOR-')],
-
-# Debug prints in separate debug window
-# sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
-# print('This is a normal print that has been re-routed.')
-# https://pysimplegui.readthedocs.io/en/latest/cookbook/#recipe-printing not reroute possibly
-
-# Subprocess launch
-# CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-#
-#     if event == 'Chrome':
-#
-#         sg.execute_command_subprocess(CHROME)
 

@@ -15,10 +15,10 @@ SCOPE = ['https://spreadsheets.google.com/feeds',
 
 API_KEY_FILE = "key.json"
 SPREADSHEET = "Lez04 (Responses)"
-PORT = 6555  # Make sure it's within the > 1024 $$ <65535 range
+PORT = 6558  # Make sure it's within the > 1024 $$ <65535 range
 
 
-def get_ws(test_run):
+def get_ws(sheet_name, test_run):
     # Based on docs here - http://gspread.readthedocs.org/en/latest/oauth2.html
 
     # Authenticate using the signed key
@@ -31,24 +31,24 @@ def get_ws(test_run):
     if test_run:
         chosen_sheet = True
         sheet_name = SPREADSHEET
-    else:
-        print("The following sheets are available")
-        for i, sheet in enumerate(gc.openall()):
-            sheet_list.append([sheet.title])
-            # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
-            print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
-
-    if sheet_list:
-        while not chosen_sheet:
-            chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
-            if chosen_sheet in range(1, len(sheet_list)):
-                sheet_name = sheet_list[chosen_sheet - 1][0]
-            else:
-                print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
-                chosen_sheet = False
-    if not sheet_list and not test_run:
-        print("No sheets available.")
-        return
+    # else:
+    #     print("The following sheets are available")
+    #     for i, sheet in enumerate(gc.openall()):
+    #         sheet_list.append([sheet.title])
+    #         # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
+    #         print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
+    #
+    # if sheet_list:
+    #     while not chosen_sheet:
+    #         chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
+    #         if chosen_sheet in range(1, len(sheet_list)):
+    #             sheet_name = sheet_list[chosen_sheet - 1][0]
+    #         else:
+    #             print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
+    #             chosen_sheet = False
+    # if not sheet_list and not test_run:
+    #     print("No sheets available.")
+    #     return
     # Open up the workbook based on the spreadsheet name
     # sheet_name = "Lez04 (Responses)"  #WIP
     workbook = gc.open(sheet_name)
@@ -65,6 +65,7 @@ def get_ws(test_run):
 
 def remove_non_ascii(text):
     return unidecode(text)
+
 
 def generate_output_sequence(students, general, id):
     """
@@ -92,7 +93,7 @@ def generate_output_sequence(students, general, id):
     return output_string
 
 
-if __name__ == '__main__':
+def main(sheet, PORT):
     host = socket.gethostname()  # get local machine name
     port = PORT  # Make sure it's within the > 1024 $$ <65535 range
     test_run = False
@@ -107,7 +108,7 @@ if __name__ == '__main__':
 
     matricola_pattern = r"^[0-9]{5}"
 
-    students_df, general_df = get_ws(test_run)
+    students_df, general_df = get_ws(sheet, test_run)
 
     while run_count < NUMBER_OF_FORMS:
         s.listen(5)
@@ -134,3 +135,7 @@ if __name__ == '__main__':
         if client_data == 'stop':
             c.close()
             break
+
+
+if __name__ == '__main__':
+    main(SPREADSHEET, PORT)
