@@ -89,7 +89,7 @@ window.close()
 
 if launch_bool:
     try:
-        print(f"Launched server with {values['-SHEET-']}. Terminate server with Ctrl+C.")
+        print(f"Launched server with {values['-SHEET-']} for {values['-SERVER-']}. Terminate server with Ctrl+C.")
         variants[values['-SERVER-']].main(values['-SHEET-'][0], int(values['-PORT-']))
     except KeyboardInterrupt:
         print("\nServer terminated by keyboard interrupt.")
