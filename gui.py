@@ -64,19 +64,35 @@ layout = [[sg.Text('Pepper education server launcher', font=('Helvetica', 16))],
 
 window = sg.Window('Pepper edu program', layout)
 
+launch_bool = False
+
 while True:  # Event Loop
     event, values = window.read()
     print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
+        try:
+            p.terminate()
+        except NameError:
+            print('No process was running yet.')
         break
     if values['-SERVER-']:
         window['-CHOSEN SERVER-'].update(values['-SERVER-'])
     if event == 'Launch':
-        launch_str = f"We launch the app with {values['-SHEET-']}."
-        window['-MESSAGE-'].update(launch_str)
-        variants[values['-SERVER-']].main(values['-SHEET-'][0], int(values['-PORT-']))
-
+        if values['-SERVER-'] in variants and values['-SHEET-'] and values['-PORT-']:
+            launch_bool = True
+            break
+        else:
+            window['-MESSAGE-'].update("Set the parameters before launch.")
 # Finish up by removing from the screen
 window.close()
+
+
+if launch_bool:
+    try:
+        print(f"Launched server with {values['-SHEET-']}. Terminate server with Ctrl+C.")
+        variants[values['-SERVER-']].main(values['-SHEET-'][0], int(values['-PORT-']))
+    except KeyboardInterrupt:
+        print("\nServer terminated by keyboard interrupt.")
+
 
 
