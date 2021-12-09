@@ -44,19 +44,6 @@ def get_forms_data():
         # Extract all data into a dataframe
         sheet_data = pd.DataFrame(sheet.get_all_records())
 
-        # Do some minor cleanups on the data
-        # Rename the columns to make it easier to manipulate
-        # The data comes in through a dictionary so we can not assume order stays the
-        # same so must name each column
-        # Currently columns are renamed without knowing their names in order to work with any form
-        # data.timestamp = pd.to_datetime(data.timestamp)
-
-        # NOTE: This code will allow us to access/work with data from the last 2 minutes
-        # pd.Timestamp.now()
-        # pd.date_range(pd.Timestamp.now(), periods=2, freq='1min')[1]
-
-        # Prints the first 10 lines of results
-
         return sheet_data
 
 
@@ -69,34 +56,8 @@ def get_ws(sheet_name, test_run):
         credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
         gc = gspread.authorize(credentials)
 
-        sheet_list = []
-
-        chosen_sheet = False
         if test_run:
-                chosen_sheet = True
                 sheet_name = SPREADSHEET
-        else:
-                print("The following sheets are available")
-                for i, sheet in enumerate(gc.openall()):
-                        sheet_list.append([sheet.title])
-                        # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
-                        print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
-
-        if sheet_list:
-                while not chosen_sheet:
-                        chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
-                        if chosen_sheet in range(1, len(sheet_list)):
-                                sheet_name = sheet_list[chosen_sheet - 1][0]
-                        else:
-                                print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
-                                chosen_sheet = False
-        if not sheet_list and not test_run:
-                print("No sheets available.")
-                return
-
-        # print("The following sheets are available")
-        # for sheet in gc.openall():
-        #         print("{} - {}".format(sheet.title, sheet.id))
 
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)
@@ -133,19 +94,19 @@ def generate_output_sequence(ws):
         return output_string
 
 
-if __name__ == '__main__':
+def main(sheet, port):
         host = socket.gethostname()  # get local machine name
-        port = PORT  # Make sure it's within the > 1024 $$ <65535 range
         test_run = False
 
         if "-t" in str(sys.argv):
                 test_run = True
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(('', port))
         NUMBER_OF_FORMS = 6  # The number of connections the server accepts before shutting down
         run_count = 0
-        ws = get_ws(SPREADSHEET, test_run)
+        ws = get_ws(sheet, test_run)
         while run_count < NUMBER_OF_FORMS:
 
                 s.listen(5)
@@ -165,3 +126,7 @@ if __name__ == '__main__':
                 if data == 'stop':
                         c.close()
                         break
+
+
+if __name__ == '__main__':
+        main(SPREADSHEET, PORT)

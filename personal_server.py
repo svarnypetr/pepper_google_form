@@ -25,32 +25,9 @@ def get_ws(sheet_name, test_run):
     credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
     gc = gspread.authorize(credentials)
 
-    sheet_list = []
-
-    chosen_sheet = False
     if test_run:
-        chosen_sheet = True
         sheet_name = SPREADSHEET
-    # else:
-    #     print("The following sheets are available")
-    #     for i, sheet in enumerate(gc.openall()):
-    #         sheet_list.append([sheet.title])
-    #         # print("{}.: {} - {}".format(str(i + 1), sheet.title, sheet.id))
-    #         print("{}. {}".format(str(i + 1), sheet.title))  # assumption the ID is not needed
-    #
-    # if sheet_list:
-    #     while not chosen_sheet:
-    #         chosen_sheet = int(input(f"Which sheet should be used? (input number 1-{len(sheet_list)}) "))
-    #         if chosen_sheet in range(1, len(sheet_list)):
-    #             sheet_name = sheet_list[chosen_sheet - 1][0]
-    #         else:
-    #             print(f"Sheet number needs to be in range 1-{len(sheet_list) + 1}")
-    #             chosen_sheet = False
-    # if not sheet_list and not test_run:
-    #     print("No sheets available.")
-    #     return
-    # Open up the workbook based on the spreadsheet name
-    # sheet_name = "Lez04 (Responses)"  #WIP
+
     workbook = gc.open(sheet_name)
 
     # Get selected worksheet
@@ -102,6 +79,8 @@ def main(sheet, PORT):
         test_run = True
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
     s.bind(('', port))
     NUMBER_OF_FORMS = 100  # The number of connections the server accepts before shutting down
     run_count = 0

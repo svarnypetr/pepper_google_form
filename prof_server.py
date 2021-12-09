@@ -25,14 +25,9 @@ def get_ws(sheet_name):
         credentials = ServiceAccountCredentials.from_json_keyfile_name(API_KEY_FILE, SCOPE)
         gc = gspread.authorize(credentials)
 
-        print("The following sheets are available")
-        for sheet in gc.openall():
-                print("{} - {}".format(sheet.title, sheet.id))
-
         # Open up the workbook based on the spreadsheet name
         workbook = gc.open(sheet_name)
 
-# !!!Added here worksheet with Prof feedback
         worksheet = workbook.worksheet('Feedback').get_all_values()
         prof_df = pd.DataFrame(worksheet)
         prof_df.columns = prof_df.iloc[0]
@@ -66,7 +61,7 @@ def generate_output_sequence(prof, id):
         return output_string
 
 
-if __name__ == '__main__':
+def main(SPREADSHEET, PORT):
         host = socket.gethostname()  # get local machine name
         port = PORT  # Make sure it's within the > 1024 $$ <65535 range
         test_run = False
@@ -75,6 +70,8 @@ if __name__ == '__main__':
                 test_run = True
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
         s.bind(('', port))
         NUMBER_OF_FORMS = 100  # The number of connections the server accepts before shutting down
         run_count = 0
@@ -108,3 +105,7 @@ if __name__ == '__main__':
                 if client_data == 'stop':
                         c.close()
                         break
+
+
+if __name__ == '__main__':
+        main(SPREADSHEET, PORT)
